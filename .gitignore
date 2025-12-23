@@ -1,0 +1,22 @@
+# ENV
+.env
+.env.*
+
+# Composer
+/vendor/
+
+# Cache
+/cache/
+/storage/
+/tmp/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
