@@ -3,66 +3,83 @@
 namespace app\Modules\Auth\Controller;
 
 use app\Controller\Controller;
-use app\Core\Redirect;
 use app\Service\JWT;
-use Exception;
+use DateTime;
+use DateTimeZone;
 
 class AuthController extends Controller
 {
 
+    private $getteController;
     public function __construct() {
         parent::__construct();
         parent::set_static_dir_view('Modules/Auth/View/');
-
+        $this->getteController = new GetterController;
     }
 
-    public function index(Object $req)
-    {   
-        
-        try {
-           
-            $this->login($req);
-         
-        } catch (\Exception $e) {
-            
-            $msg = parent::components('View/Components/message.php',
-            [
-                'status' => json_decode($e->getMessage())->status,
-                'message' => json_decode($e->getMessage())->message
+    public function auth(object $req)
+    {
+        // Garante POST
+        if ($req->method !== 'POST') {
+            return parent::apiView(405, [
+                'status'  => 'error',
+                'message' => 'Método não permitido'
             ]);
-
         }
 
-        parent::html_render()
-        ->load('Login/index.php')
-        ->set([
-            'title' => 'Autenticação',
-            'message' => $msg ?? "",
-            'texto' => 'Efetuar login'
-        ])
-        ->display();
-    }
+        // Funciona com JSON e POST
+        $user = $req->input('username');
+        $pass = $req->input('password');
 
-    private function login(Object $req)
-    {   
+        if (!$user || !$pass) {
+            return parent::apiView(400, [
+                'status'  => 'error',
+                'message' => 'Campos vazios não são permitidos!'
+            ]);
+        }
 
-        if(!$req->exist_post()) return;
+        // Exemplo simples (depois troca por banco)
 
-        $user = $req->post('user');
-        $pass = $req->post('pass');
+        $userData = $this->getteController->getForUsername($user); 
 
-        if(!$user && !$pass) return throw new Exception(json_encode(['status' => 'error', 'message' => 'Campos vazios não são permitidos!']));
+        if (!$userData) {
+            return parent::apiView(401, [
+                'status'  => 'fail',
+                'message' => 'Usuário não identificado!'
+            ]);
+        }
 
-        if($user !== 'admin' || $pass !== 'asd123') return throw new Exception(json_encode(['status' => 'error', 'message' => 'Usuario ou senha incorretos!']));
-       
-        if($user == 'admin' && $pass == 'asd123') 
+        #=========================
+        #  validar senha
+        #=========================
+
+        if(!password_verify($pass, $userData['hash_password'])) 
         {
-            $jwt = new JWT;
-            $_SESSION[COOKIE_NAME] = $jwt->encode(['user' => $user, 'name' => 'Luís']);
-            Redirect::to('/produtos');
+            return parent::apiView(401, [
+                'status'  => 'fail',
+                'message' => 'Senha incorreta!'
+            ]);
         }
+
+        // Login OK
+        $jwt = new JWT();
+        $now = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
         
-        return true;
+        $token = $jwt->encode([
+            'uuid' => $userData['uuid'],
+            'name' => $userData['name'],
+            'username' => $user,
+            'key' => $userData['key'],
+            'create_date' =>  $now->getTimestamp(),
+            'expired_date' => $now->modify(EXPIRED_JWT)->getTimestamp()
+        ]);
+
+        return parent::apiView(201, [
+            'status'    => 'success',
+            'token'     => $token,
+            'token_desc' => strlen($token),
+            'redirect'  => '/produtos'
+        ]);
     }
     
     public function logout(Object $req)

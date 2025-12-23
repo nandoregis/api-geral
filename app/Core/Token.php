@@ -13,4 +13,8 @@ class Token
         return true;
     }
 
+    public static function get_token()
+    {
+        return isset($_SESSION[COOKIE_NAME]) ? $_SESSION[COOKIE_NAME] : '';
+    }
 }

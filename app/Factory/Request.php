@@ -2,58 +2,95 @@
 
 namespace app\Factory;
 
-class Request {
+use app\Core\Token;
 
-
+class Request
+{
     public array $headers;
     public array $body;
     public string $uri;
     public string $method;
-    private string $autToken;
+    private string $authToken;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->headers = getallheaders();
-        $this->body = $_POST ?: $_GET; 
-        $this->uri = strtok($_SERVER["REQUEST_URI"], '?');
-        $this->method = $_SERVER["REQUEST_METHOD"];
-        $this->autToken = isset($_SESSION[COOKIE_NAME]) ? $_SESSION[COOKIE_NAME] : '';
-    } 
+        $this->method  = $_SERVER['REQUEST_METHOD'];
+        $this->uri     = strtok($_SERVER['REQUEST_URI'], '?');
+        $this->authToken = Token::get_token();
 
-    public function input(string $key, $default = null) 
+        $this->body = $this->resolveBody();
+    }
+
+    /**
+     * Resolve body para:
+     * - JSON (fetch)
+     * - POST tradicional
+     * - GET
+     */
+    private function resolveBody(): array
+    {
+        // JSON (fetch)
+        if ($this->isJson()) {
+            $json = json_decode(file_get_contents('php://input'), true);
+            return is_array($json) ? $json : [];
+        }
+
+        // POST tradicional
+        if ($this->method === 'POST') {
+            return $_POST;
+        }
+
+        // GET
+        if ($this->method === 'GET') {
+            return $_GET;
+        }
+
+        return [];
+    }
+
+    private function isJson(): bool
+    {
+        return isset($this->headers['Content-Type']) &&
+               str_contains($this->headers['Content-Type'], 'application/json');
+    }
+
+    /* ==========================
+       Métodos públicos
+    ========================== */
+
+    public function input(string $key, $default = null)
     {
         return $this->body[$key] ?? $default;
     }
 
-    public function get(string $key, $default = null) 
+    public function get(string $key, $default = null)
     {
-        return $this->getRequest()[$key] ?? $default;
+        return $_GET[$key] ?? $default;
     }
 
-    public function post(string $key, $default = null) 
+    public function post(string $key, $default = null)
     {
-        return $this->postRequest()[$key] ?? $default;
+        return $_POST[$key] ?? $default;
     }
 
-    public function get_auth_token()
+    public function exist_post(): bool
     {
-        return $this->autToken;
+        return !empty($_POST) || $this->isJson();
     }
 
-    public function exist_post()
+    public function get_auth_token(): string
     {
-        if( $this->postRequest() ) return true;
-        return false;
-    }
-    
-    private function getRequest(): array 
-    {
-        return $this->method === 'GET' ? $_GET : [];
+        return $this->authToken;
     }
 
-    private function postRequest(): array 
+    public function destroy_auth_token(): void
     {
-        return $this->method === 'POST' ? $_POST : [];
+        $this->authToken = '';
     }
-    
 
+    public function get_uri(): string
+    {
+        return $this->uri;
+    }
 }

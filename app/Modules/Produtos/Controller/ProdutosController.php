@@ -20,7 +20,7 @@ class ProdutosController extends Controller
     public function index()
     {   
 
-        parent::apiView(200, ['nome' => 'Luis'] );
+        return parent::apiView(200, ['nome' => 'Luis'] );
 
     }
 

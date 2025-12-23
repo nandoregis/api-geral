@@ -1,6 +1,8 @@
 <?php
 
 include_once('app/Config/config.vars.php');
+include_once('app/Config/config.db.php');
+
 
 $autoload = function ($class) {
     

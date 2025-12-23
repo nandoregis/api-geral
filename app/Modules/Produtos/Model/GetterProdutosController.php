@@ -16,6 +16,10 @@ class GetterProdutosController extends Model
 
     public function getAll()
     {
+        #===================================#
+        #======| GET TODOS OS PRODUTOS =====#
+        #===================================#
+
         
     }
 }

@@ -13,8 +13,13 @@ class Model
         $this->database = new DB;
     }
 
-    protected function mysql_conn()
+    protected function usersDB()
     {
-        return $this->database->mysql();
+        return $this->database->users();
+    }
+
+    protected function PrimayDB()
+    {
+        return $this->database->db();
     }
 }

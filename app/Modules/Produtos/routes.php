@@ -4,7 +4,7 @@ use app\Modules\Produtos\Controller\ProdutosController;
 
 return [
     [
-        'static' => 'produtos',
+        'static' => 'v1/produtos',
         'routes' => [
             [   
                 "route" => "/",

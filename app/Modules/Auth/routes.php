@@ -12,11 +12,10 @@ return [
             [   
                 "route" => "/",
                 "controller" => new AuthController,
-                "method" => "index",
-                "http" => ["GET", "POST"],
+                "method" => "auth",
+                "http" => ["POST"],
                 "middlewares" => [
                     new CacheMiddleware, 
-                    new RedirectIfAuthenticatedMiddleware
                 ],
                 "active" => true
             ],
@@ -32,31 +31,6 @@ return [
             ]
         ]
     ],
-    [
-        'static' => 'auth2',
-        'routes' => [
-            [   
-                "route" => "/",
-                "controller" => new AuthController,
-                "method" => "index",
-                "http" => ["GET", "POST"],
-                "middlewares" => [
-                    new CacheMiddleware, 
-                    new RedirectIfAuthenticatedMiddleware
-                ],
-                "active" => true
-            ],
-            [   
-                "route" => "/logout",
-                "controller" => new AuthController,
-                "method" => "logout",
-                "http" => ["GET"],
-                "middlewares" => [
-                    new RedirectIfLogoutMiddleware
-                ],
-                "active" => true
-            ]
-        ]
-    ],
+   
 
 ];
