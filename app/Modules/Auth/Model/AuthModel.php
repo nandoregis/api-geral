@@ -34,7 +34,7 @@ class AuthModel extends Model
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $user ?: null;
+        return $user ?: [];
     }
 
     public function getForUsername(String $username) : Array 

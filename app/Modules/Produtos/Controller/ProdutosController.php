@@ -3,24 +3,23 @@
 namespace app\Modules\Produtos\Controller;
 
 use app\Controller\Controller;
-use app\View\ApiView;
 
 class ProdutosController extends Controller
 {
 
     #
-
+    private $produtosController;
     public function __construct() 
     {
         parent::__construct();
-        
+        $this->produtosController = new GetterProdutosController;
     }
 
     #
     public function index()
     {   
-
-        return parent::apiView(200, ['nome' => 'Luis'] );
+        $response = $this->produtosController->all();
+        return parent::apiView(200, $response);
 
     }
 
