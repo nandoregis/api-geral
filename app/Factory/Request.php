@@ -11,14 +11,13 @@ class Request
     public string $uri;
     public string $method;
     private string $authToken;
-
+  
     public function __construct()
     {
         $this->headers = getallheaders();
         $this->method  = $_SERVER['REQUEST_METHOD'];
         $this->uri     = strtok($_SERVER['REQUEST_URI'], '?');
         $this->authToken = Token::get_token();
-
         $this->body = $this->resolveBody();
     }
 
@@ -93,4 +92,10 @@ class Request
     {
         return $this->uri;
     }
+
+    public function set_var(string $key, string $value) {
+        $this->body[$key] = $value;
+    }
+
+
 }

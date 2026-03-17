@@ -9,6 +9,7 @@ class Routes
 {
     private $dir;
     private $routes = [];
+    private $var_name = [];
 
     public function __construct() 
     {   
@@ -82,7 +83,14 @@ class Routes
     private function register_route(string $static, array $routeData): void
     {
         $path = $routeData['route'] === '/' ? '' : $routeData['route'];
-        $route = ($static ? "/$static" : '') . str_replace(['{', '}'], ['$',''], $path);
+        $vars = str_replace(['{', '}'], ['$',''], $path);
+        $route = ($static ? "/$static" : '') . $vars;
+
+        $vars = str_replace('/', "", $vars);
+        
+        if( str_contains( $vars, '$') ) {
+            array_push($this->var_name, ltrim($vars, '$'));
+        }
 
         $http = $routeData['http'] ?? [];
         $controller = $routeData['controller'] ?? null;
@@ -130,43 +138,65 @@ class Routes
        ====================================================== */
 
     private function set_route_get(string $route, object $controller, string $method, array $middlewares)
-    {
-        get($route, function () use ($controller, $method, $middlewares) {
+    {   
+       
+        get($route, function () use ($controller, $method, $middlewares, $route) {
             $controllerCallable = fn($req) => $controller->$method($req);
             $app = Pipeline::pip($middlewares, $controllerCallable);
             $req = new Request();
+            $this->set_vars_value($req, $route);
             $app($req);
         });
     }
 
     private function set_route_post(string $route, object $controller, string $method, array $middlewares)
     {
-        post($route, function () use ($controller, $method, $middlewares) {
+        post($route, function () use ($controller, $method, $middlewares, $route) {
             $controllerCallable = fn($req) => $controller->$method($req);
             $app = Pipeline::pip($middlewares, $controllerCallable);
             $req = new Request();
+            $this->set_vars_value($req, $route);
             $app($req);
         });
     }
 
     private function set_route_put(string $route, object $controller, string $method, array $middlewares)
     {
-        put($route, function () use ($controller, $method, $middlewares) {
+        put($route, function () use ($controller, $method, $middlewares, $route) {
             $controllerCallable = fn($req) => $controller->$method($req);
             $app = Pipeline::pip($middlewares, $controllerCallable);
             $req = new Request();
+            $this->set_vars_value($req, $route);
             $app($req);
         });
     }
 
     private function set_route_delete(string $route, object $controller, string $method, array $middlewares)
     {
-        delete($route, function () use ($controller, $method, $middlewares) {
+        delete($route, function () use ($controller, $method, $middlewares, $route) {
             $controllerCallable = fn($req) => $controller->$method($req);
             $app = Pipeline::pip($middlewares, $controllerCallable);
             $req = new Request();
+            $this->set_vars_value($req, $route);
             $app($req);
         });
+    }
+
+    private function set_vars_value ( object $req, string $route ) {
+
+        $part_route = explode('/', $route);
+        $server_uri = explode('/', $_SERVER['REQUEST_URI']);
+        $var_name = null;
+
+        if(empty($server_uri)) return;
+
+        foreach ($part_route as $key => $value) {
+            if( str_contains($value, '$')) {
+                $var_name = ltrim($value, '$');
+                $req->set_var($var_name, $server_uri[$key]);
+            }
+        }
+
     }
 
     /* ======================================================
