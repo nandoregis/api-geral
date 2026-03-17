@@ -23,9 +23,12 @@ class ProdutosController extends Controller
 
     }
 
-    public function getForUuid()
-    {
+    public function getForUuid(object $req)
+    {   
+        $uuid = explode('/', $req->get_uri() );
+        $uuid = end($uuid);
 
+        return parent::apiView(200, $this->produtosController->getByUUID($uuid) );
     }
 
 

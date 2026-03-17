@@ -25,9 +25,22 @@ class GetterProdutosModel extends Model
         $stmt = parent::PrimayDB()->prepare($sql);
         $stmt->execute();
 
-        $products = $stmt->fetch(PDO::FETCH_ASSOC);
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $products ?: [];
         
+    }
+
+    public function getByUUID(String $uuid) : array
+    {   
+
+        $sql = "SELECT * FROM products WHERE uuid = ?";
+
+        $stmt = parent::PrimayDB()->prepare($sql);
+        $stmt->execute([$uuid]);
+
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $product ?: [];
     }
 }

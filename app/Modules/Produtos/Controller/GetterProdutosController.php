@@ -16,4 +16,10 @@ class GetterProdutosController
     {
         return $this->getterProdutosModel->getAll();
     }
+
+    public function getByUUID(String $uuid)
+    {
+        return $this->getterProdutosModel->getByUUID($uuid);
+    }
+
 }
