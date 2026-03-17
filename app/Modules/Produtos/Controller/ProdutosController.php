@@ -7,7 +7,7 @@ use app\Controller\Controller;
 class ProdutosController extends Controller
 {
 
-    #
+    
     private $produtosController;
     public function __construct() 
     {
@@ -15,7 +15,6 @@ class ProdutosController extends Controller
         $this->produtosController = new GetterProdutosController;
     }
 
-    #
     public function index()
     {   
         $response = $this->produtosController->all();
@@ -32,6 +31,7 @@ class ProdutosController extends Controller
     {   
         return parent::apiView(200, $this->produtosController->getByReference( $req->input('reference') ));
     }
+
 
 
 }
