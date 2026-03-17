@@ -2,9 +2,9 @@
 
 namespace app\Test;
 
-use app\Core\Href;
+use app\Factory\Href as FactoryHref;
 
-class HrefTest extends Href
+class HrefTest extends FactoryHref
 {
 
     /**
