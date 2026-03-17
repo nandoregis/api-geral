@@ -43,4 +43,17 @@ class GetterProdutosModel extends Model
 
         return $product ?: [];
     }
+
+    public function getByReference(String $reference) : array
+    {   
+
+        $sql = "SELECT * FROM products WHERE reference = ?";
+
+        $stmt = parent::PrimayDB()->prepare($sql);
+        $stmt->execute([$reference]);
+
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $product ?: [];
+    }
 }

@@ -22,4 +22,9 @@ class GetterProdutosController
         return $this->getterProdutosModel->getByUUID($uuid);
     }
 
+    public function getByReference(String $reference)
+    {
+        return $this->getterProdutosModel->getByReference($reference);
+    }
+
 }

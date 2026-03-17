@@ -19,7 +19,17 @@ return [
             [   
                 "route" => "/{uuid}",
                 "controller" => new ProdutosController,
-                "method" => "getForUuid",
+                "method" => "getByUUID",
+                "http" => ["GET"],
+                "middlewares" => [
+                    
+                ],
+                "active" => true
+            ],
+            [   
+                "route" => "/reference/{reference}",
+                "controller" => new ProdutosController,
+                "method" => "getByReference",
                 "http" => ["GET"],
                 "middlewares" => [
                     

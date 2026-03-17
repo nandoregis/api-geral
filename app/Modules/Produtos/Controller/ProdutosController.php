@@ -23,9 +23,14 @@ class ProdutosController extends Controller
 
     }
 
-    public function getForUuid(object $req)
+    public function getByUUID(object $req)
     {   
         return parent::apiView(200, $this->produtosController->getByUUID( $req->input('uuid') ));
+    }
+
+    public function getByReference(object $req)
+    {   
+        return parent::apiView(200, $this->produtosController->getByReference( $req->input('reference') ));
     }
 
 
