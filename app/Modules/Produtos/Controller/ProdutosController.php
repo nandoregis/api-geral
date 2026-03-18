@@ -35,7 +35,9 @@ class ProdutosController extends Controller
 
     public function create(object $req) 
     {   
-        return parent::apiView(201, $this->setterProdutosController->create( $req->input('reference'), $req->input('name') ));
+        $response = $this->setterProdutosController->create( $req->input('reference'), $req->input('name') );
+        $code = isset($response['code']) ? $response['code'] : 201;
+        return parent::apiView( $code , $response['message']);
     }
 
 

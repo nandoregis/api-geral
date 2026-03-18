@@ -24,4 +24,9 @@ class Validation
     {
         return preg_match($pattern, $value) === 1;
     }
+
+    public static function arrayHasKey(array $arr, string $key)
+    {
+        return isset($arr[$key]);
+    }
 }
