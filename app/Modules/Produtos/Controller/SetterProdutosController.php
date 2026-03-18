@@ -2,32 +2,49 @@
 
 namespace app\Modules\Produtos\Controller;
 
+use app\Modules\Produtos\Model\GetterProdutosModel;
 use app\Modules\Produtos\Model\SetterProdutosModel;
 use app\Modules\Produtos\Validator\ProductValidator;
 
 class SetterProdutosController
 {
-    private $setterProdutosModel;
     private $productValidator;
+    private $setterProdutosModel;
+    private $getterProdutosModel;
     public function __construct() 
     {
        $this->setterProdutosModel = new SetterProdutosModel;
+       $this->getterProdutosModel = new GetterProdutosModel;
        $this->productValidator = new ProductValidator;
     }
 
-    public function create(string $reference, string $name)
+    public function create(object $req)
     {   
+        
+        $reference = $req->input('reference');
+        $name = $req->input('name');
         
         $this->productValidator->validateReference($reference);
         $this->productValidator->validateName($name);
 
-        if ($this->productValidator->hasErrors()) {
+        if ($this->productValidator->hasErrors()) 
+        {
             return [
                 'status' => false,
                 'code' => 401,
                 'message' => $this->productValidator->getErrors()
             ];
         }
+
+        if( $this->getterProdutosModel->getByReference($reference) ) 
+        {
+            return [
+                'status' => false,
+                'code' => 409,
+                'message' => "Já existe um produto com essa referência"
+            ];
+        }
+
 
         return $this->setterProdutosModel->create($reference, $name);
     }

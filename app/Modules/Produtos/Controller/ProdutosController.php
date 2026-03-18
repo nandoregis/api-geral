@@ -3,6 +3,7 @@
 namespace app\Modules\Produtos\Controller;
 
 use app\Controller\Controller;
+use app\Core\Validation;
 
 class ProdutosController extends Controller
 {
@@ -35,9 +36,9 @@ class ProdutosController extends Controller
 
     public function create(object $req) 
     {   
-        $response = $this->setterProdutosController->create( $req->input('reference'), $req->input('name') );
-        $code = isset($response['code']) ? $response['code'] : 201;
-        return parent::apiView( $code , $response['message']);
+        $response = $this->setterProdutosController->create($req);
+        $code = Validation::hasCode( Validation::arrayHasKey($response, 'code'), 201);
+        return parent::apiView( $code , $response);
     }
 
 

@@ -9,7 +9,7 @@ class ProductValidator
 {
     private $errors = [];
 
-    public function validateReference(string $reference)
+    public function validateReference(string | null $reference)
     {
 
         if (Validation::isEmpty($reference)) {
@@ -25,7 +25,7 @@ class ProductValidator
         return true;
     }
 
-    public function validateName(string $name)
+    public function validateName(string | null $name)
     {
 
         if (Validation::isEmpty($name)) {

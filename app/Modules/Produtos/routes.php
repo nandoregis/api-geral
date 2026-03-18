@@ -35,6 +35,16 @@ return [
                     
                 ],
                 "active" => true
+            ],
+            [   
+                "route" => "/c/create",
+                "controller" => new ProdutosController,
+                "method" => "create",
+                "http" => ["POST"],
+                "middlewares" => [
+                    
+                ],
+                "active" => true
             ]
         ]
     ]
