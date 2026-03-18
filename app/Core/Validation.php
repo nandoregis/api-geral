@@ -27,6 +27,10 @@ class Validation
 
     public static function arrayHasKey(array $arr, string $key)
     {
-        return isset($arr[$key]);
+        return isset($arr[$key]) ? $arr[$key] : false;
+    }
+
+    public static function hasCode(int $code, int $isCodeReturn) {
+        return $code ? $code : $isCodeReturn;
     }
 }
