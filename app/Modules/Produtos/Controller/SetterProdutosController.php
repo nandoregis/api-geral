@@ -2,6 +2,7 @@
 
 namespace app\Modules\Produtos\Controller;
 
+use app\Core\HttpCode;
 use app\Modules\Produtos\Model\GetterProdutosModel;
 use app\Modules\Produtos\Model\SetterProdutosModel;
 use app\Modules\Produtos\Validator\ProductValidator;
@@ -31,7 +32,7 @@ class SetterProdutosController
         {
             return [
                 'status' => false,
-                'code' => 401,
+                'code' => HttpCode::UNAUTHORIZED,
                 'message' => $this->productValidator->getErrors()
             ];
         }
@@ -40,7 +41,7 @@ class SetterProdutosController
         {
             return [
                 'status' => false,
-                'code' => 409,
+                'code' => HttpCode::CONFLICT,
                 'message' => "Já existe um produto com essa referência"
             ];
         }
