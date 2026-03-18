@@ -7,7 +7,7 @@ class Validation
 
     public static function isEmpty( ...$values ) : array | bool
     {   
-        
+
         $keyIsEmpty = [];
 
         foreach ($values as $key => $value) {
@@ -18,5 +18,10 @@ class Validation
 
         return empty($keyIsEmpty) ? false : $keyIsEmpty;
     
+    }
+
+    public static function regex(string $value, string $pattern): bool
+    {
+        return preg_match($pattern, $value) === 1;
     }
 }
