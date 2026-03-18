@@ -12,5 +12,17 @@ class SetterProdutosController
        $this->setterProdutosModel = new SetterProdutosModel;
     }
 
+    public function create(string $reference, string $name)
+    {   
+        if(empty($reference) || empty($name)) 
+        {
+            return [
+                'error' => true,
+                'message' => 'Dados inválidos'
+            ];
+        }
+        
+        return $this->setterProdutosModel->create($reference, $name);
+    }
 
 }

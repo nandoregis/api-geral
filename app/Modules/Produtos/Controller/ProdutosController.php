@@ -32,6 +32,11 @@ class ProdutosController extends Controller
         return parent::apiView(200, $this->produtosController->getByReference( $req->input('reference') ));
     }
 
+    public function create(object $req) 
+    {
+        return parent::apiView(201, $req->input('reference'), $req->input('name') );
+    }
+
 
 
 }

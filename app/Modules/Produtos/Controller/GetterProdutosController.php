@@ -26,5 +26,6 @@ class GetterProdutosController
     {
         return $this->getterProdutosModel->getByReference($reference);
     }
+    
 
 }
