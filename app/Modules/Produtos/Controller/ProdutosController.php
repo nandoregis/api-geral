@@ -8,35 +8,35 @@ class ProdutosController extends Controller
 {
 
     
-    private $produtosController;
+    private $getterProdutosController;
+    private $setterProdutosController;
+
     public function __construct() 
     {
         parent::__construct();
-        $this->produtosController = new GetterProdutosController;
+        $this->getterProdutosController = new GetterProdutosController;
+        $this->setterProdutosController = new SetterProdutosController;
     }
 
     public function index()
     {   
-        $response = $this->produtosController->all();
-        return parent::apiView(200, $response);
-
+        return parent::apiView(200, $this->getterProdutosController->all() );
     }
 
     public function getByUUID(object $req)
     {   
-        return parent::apiView(200, $this->produtosController->getByUUID( $req->input('uuid') ));
+        return parent::apiView(200, $this->getterProdutosController->getByUUID( $req->input('uuid') ));
     }
 
     public function getByReference(object $req)
     {   
-        return parent::apiView(200, $this->produtosController->getByReference( $req->input('reference') ));
+        return parent::apiView(200, $this->getterProdutosController->getByReference( $req->input('reference') ));
     }
 
     public function create(object $req) 
-    {
-        return parent::apiView(201, $req->input('reference'), $req->input('name') );
+    {   
+        return parent::apiView(201, $this->setterProdutosController->create( $req->input('reference'), $req->input('name') ));
     }
-
 
 
 }
