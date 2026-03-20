@@ -2,6 +2,7 @@
 
 namespace app\Modules\Produtos\Controller;
 
+use app\Factory\Response;
 use app\Modules\Produtos\Model\GetterProdutosModel;
 
 class GetterProdutosController
@@ -14,17 +15,17 @@ class GetterProdutosController
 
     public function all()
     {
-        return $this->getterProdutosModel->getAll();
+        return Response::success(200, "Todos os produtos", $this->getterProdutosModel->getAll());
     }
 
     public function getByUUID(string $uuid)
     {
-        return $this->getterProdutosModel->getByUUID($uuid);
+        return Response::success(200, "Produto pego pelo UUID", $this->getterProdutosModel->getByUUID($uuid));
     }
 
     public function getByReference(string $reference)
     {
-        return $this->getterProdutosModel->getByReference($reference);
+        return Response::success(200, "Produto pego pela referencia", $this->getterProdutosModel->getByReference($reference));
     }
 
     /**
@@ -35,5 +36,5 @@ class GetterProdutosController
         return $this->getterProdutosModel->checkReferenceWithDifferentUUID($uuid, $reference);
     }
     
-
+    
 }
