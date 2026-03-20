@@ -38,9 +38,21 @@ class ProdutosController extends Controller
     public function create(object $req) 
     {   
         $response = $this->setterProdutosController->create($req);
-        $code = Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED);
-        return parent::apiView( $code , $response);
+        return parent::apiView( 
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED), 
+            $response);
     }
 
+    public function update(object $req) 
+    {   
+
+        $response = $this->setterProdutosController->update($req);
+        return parent::apiView( 
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED),
+            $response
+        );
+    }
+
+    
 
 }
