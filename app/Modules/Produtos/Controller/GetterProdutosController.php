@@ -27,7 +27,9 @@ class GetterProdutosController
         return $this->getterProdutosModel->getByReference($reference);
     }
 
-    //check Reference with Different UUID
+    /**
+     *  ### Verifica se referencia existe em que o uuid do produto seja diferente.
+     */
     public function checkReferenceWithDifferentUUID(string $uuid, string $reference)
     {
         return $this->getterProdutosModel->checkReferenceWithDifferentUUID($uuid, $reference);
