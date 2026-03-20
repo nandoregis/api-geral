@@ -92,7 +92,19 @@ class GetterProdutosModel extends Model
         $sql = "SELECT * FROM sizes WHERE uuid = ?";
 
         $stmt = parent::PrimayDB()->prepare($sql);
-        $stmt->execute();
+        $stmt->execute([$uuid]);
+
+        $size = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $size ?: [];
+    }
+
+    public function getSizeByName(string $name) : array
+    {
+        $sql = "SELECT * FROM sizes WHERE `name` = ?";
+
+        $stmt = parent::PrimayDB()->prepare($sql);
+        $stmt->execute([$name]);
 
         $size = $stmt->fetch(PDO::FETCH_ASSOC);
 
