@@ -29,7 +29,7 @@ class ProductValidator
     {
 
         if (Validation::isEmpty($name)) {
-            $this->errors['name'] = 'nome não pode ser vazia.';
+            $this->errors['name'] = 'nome não pode ser vazio.';
             return false;
         }
 
