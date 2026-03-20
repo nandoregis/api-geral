@@ -67,10 +67,10 @@ class SetterProdutosModel extends Model
 
             return [
                 'error' => true,
-                'message' => 'Erro ao criar produto'
+                'message' => 'Erro ao editar produto'
             ];
         }
-        
+
 
     }
     

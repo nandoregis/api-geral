@@ -69,7 +69,7 @@ class SetterProdutosController
             ];
         }
 
-        if( $this->getterProdutosModel->getByReference($reference) ) 
+        if( $this->getterProdutosModel->checkReferenceWithDifferentUUID($uuid, $reference) ) 
         {
             return [
                 'status' => false,
@@ -79,7 +79,7 @@ class SetterProdutosController
         }
         
 
-        return []; // retornar produto atualizado
+        return $this->setterProdutosModel->update($uuid, $reference, $name);
 
     }
 
