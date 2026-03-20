@@ -50,4 +50,38 @@ class SetterProdutosController
         return $this->setterProdutosModel->create($reference, $name);
     }
 
+    public function update(object $req)
+    { 
+        // reference, name, : uuid
+        $uuid = $req->input('uuid');
+        $reference = $req->input('reference');
+        $name = $req->input('name');
+        
+        $this->productValidator->validateReference($reference);
+        $this->productValidator->validateName($name);
+
+        if ($this->productValidator->hasErrors()) 
+        {
+            return [
+                'status' => false,
+                'code' => HttpCode::UNAUTHORIZED,
+                'message' => $this->productValidator->getErrors()
+            ];
+        }
+
+        if( $this->getterProdutosModel->getByReference($reference) ) 
+        {
+            return [
+                'status' => false,
+                'code' => HttpCode::CONFLICT,
+                'message' => "Já existe um produto com essa referência"
+            ];
+        }
+        
+
+        return []; // retornar produto atualizado
+
+    }
+
+
 }
