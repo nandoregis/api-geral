@@ -65,6 +65,26 @@ class ProductValidator
         return true;
     }
 
+    public function validateNameSize(string | null $name)
+    {
+        if (Validation::noExist($name)) {
+            $this->errors['name'] = 'Não está com o parametro name, faça a correção.';
+            return false;
+        }
+
+        if (Validation::isEmpty($name)) {
+            $this->errors['name'] = 'nome não pode ser vazio.';
+            return false;
+        }
+
+        if (!Validation::regex($name, ProductRules::NAME_SIZE)) {
+            $this->errors['name'] = 'nome fora do formato esperado.';
+            return false;
+        }
+
+        return true;
+    }
+
     public function getErrors()
     {
         return $this->errors;

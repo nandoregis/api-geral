@@ -89,7 +89,7 @@ class SetterProdutosController
     
         $name = $req->input('name');
         
-        $this->productValidator->validateName($name);
+        $this->productValidator->validateNameSize($name);
 
         if ($this->productValidator->hasErrors()) {
             return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
