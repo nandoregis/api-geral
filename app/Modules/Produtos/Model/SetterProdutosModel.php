@@ -46,6 +46,33 @@ class SetterProdutosModel extends Model
     }
 
 
+    public function update(string $uuid, string $reference, string $name) : array
+    {
+        
+        $sql = "UPDATE products SET reference = :reference, `name` = :`name` WHERE uuid = :uuid";
+
+        try {
+            $stmt = parent::PrimayDB()->prepare($sql);
+            
+            $stmt->bindValue(':reference', $reference);
+            $stmt->bindValue(':name', $name);
+            $stmt->bindValue(':uuid', $uuid);
+
+            $stmt->execute();
+            
+            return $this->getterProdutosModel->getByUUID($uuid);
+            
+        }catch (\PDOException $e) {
+            error_log($e->getMessage());
+
+            return [
+                'error' => true,
+                'message' => 'Erro ao criar produto'
+            ];
+        }
+        
+
+    }
     
 
 }
