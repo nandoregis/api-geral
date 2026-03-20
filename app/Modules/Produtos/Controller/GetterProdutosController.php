@@ -36,10 +36,25 @@ class GetterProdutosController
         return $this->getterProdutosModel->checkReferenceWithDifferentUUID($uuid, $reference);
     }
 
+
+    //=====================================================================================
+
+    public function getAllSizes() : array
+    {
+        return Response::success(200, "Todas os tamanhos", $this->getterProdutosModel->getAllSizes());
+    }
+
+    public function getSizeByUUID(object $req) : array
+    {
+        return Response::success(200, "Tamanho pego pelo UUID", $this->getterProdutosModel->getSizeByUUID($req->input('uuid')));
+    }
+
     public function checkNameSizeWithDifferentUUID(string $uuid, string $name)
     {
         return $this->getterProdutosModel->checkNameSizeWithDifferentUUID($uuid, $name);
     }
+
+
     
     
 }

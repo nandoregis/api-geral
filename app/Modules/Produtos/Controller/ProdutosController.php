@@ -22,17 +22,29 @@ class ProdutosController extends Controller
 
     public function getAll()
     {   
-        return parent::apiView(HttpCode::OK, $this->getterProdutosController->all() );
+        $response = $this->getterProdutosController->all();
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
     }
 
     public function getByUUID(object $req)
     {   
-        return parent::apiView(HttpCode::OK, $this->getterProdutosController->getByUUID( $req->input('uuid') ));
+        $response = $this->getterProdutosController->getByUUID( $req->input('uuid') );
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
     }
 
     public function getByReference(object $req)
     {   
-        return parent::apiView(HttpCode::OK, $this->getterProdutosController->getByReference( $req->input('reference') ));
+        $response = $this->getterProdutosController->getByReference( $req->input('reference') );
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
     }
 
     public function create(object $req) 
@@ -40,7 +52,8 @@ class ProdutosController extends Controller
         $response = $this->setterProdutosController->create($req);
         return parent::apiView( 
             Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED), 
-            $response);
+            $response
+        );
     }
 
     public function update(object $req) 
@@ -53,6 +66,34 @@ class ProdutosController extends Controller
         );
     }
 
-    
+    public function delete(object $req) {}
+
+    //==========================================================================
+
+    public function saleProducts() {}
+
+    public function stockProductEntry() {}
+
+    public function stockProductExit() {}
+
+    //==========================================================================
+
+    public function getAllSizes()
+    {
+        $response = $this->getterProdutosController->getAllSizes();
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
+
+    public function getSizeByUUID(object $req) 
+    {
+        $response = $this->getterProdutosController->getSizeByUUID($req);
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
 
 }
