@@ -48,7 +48,7 @@ class ProdutosController extends Controller
 
         $response = $this->setterProdutosController->update($req);
         return parent::apiView( 
-            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED),
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
             $response
         );
     }
