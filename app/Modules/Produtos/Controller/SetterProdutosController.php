@@ -111,7 +111,19 @@ class SetterProdutosController
         
     }
 
-    public function createColors(string $name, string $color_hex) {}
+    public function createColors(object $req) {
+
+        $name = $req->input('name');
+        
+        $this->productValidator->validateName($name);
+
+        if ($this->productValidator->hasErrors()) {
+            return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
+        }
+
+        
+
+    }
 
     public function createProductVariations() {}
 

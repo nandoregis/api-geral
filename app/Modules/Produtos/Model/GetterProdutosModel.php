@@ -14,49 +14,27 @@ class GetterProdutosModel extends Model
         parent::__construct();
     }
 
-
-    public function getAll()
+    public function getAll(int $limit = 50, int $offset = 0): array
     {
-        #===================================#
-        #======| GET TODOS OS PRODUTOS =====#
-        #===================================#
-        $sql = "SELECT * FROM products";
-
+        $sql = "SELECT * FROM products LIMIT ? OFFSET ?";
         $stmt = parent::PrimayDB()->prepare($sql);
-        $stmt->execute();
-
-        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $products ?: [];
-        
+        $stmt->execute([$limit, $offset]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
     public function getByUUID(string $uuid) : array
     {   
-
         $sql = "SELECT * FROM products WHERE uuid = ?";
-
-        $stmt = parent::PrimayDB()->prepare($sql);
-        $stmt->execute([$uuid]);
-
-        $product = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $product ?: [];
+        return $this->fetchOne($sql, [$uuid]);
     }
 
     public function getByReference(string $reference) : array
     {   
-
         $sql = "SELECT * FROM products WHERE reference = ?";
-
-        $stmt = parent::PrimayDB()->prepare($sql);
-        $stmt->execute([$reference]);
-
-        $product = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $product ?: [];
+        return $this->fetchOne($sql, [$reference]);
     }
     
+    #
     public function checkReferenceWithDifferentUUID(string $uuid, string $reference) : bool
     {   
         $sql = "SELECT uuid, reference FROM products WHERE reference = ? AND uuid != ? LIMIT 1";
@@ -78,39 +56,22 @@ class GetterProdutosModel extends Model
     public function getAllSizes() : array
     {
         $sql = "SELECT * FROM sizes";
-
-        $stmt = parent::PrimayDB()->prepare($sql);
-        $stmt->execute();
-
-        $sizes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $sizes ?: [];
+        return $this->fetchAll($sql);
     }
 
     public function getSizeByUUID(string $uuid) : array
     {
         $sql = "SELECT * FROM sizes WHERE uuid = ?";
-
-        $stmt = parent::PrimayDB()->prepare($sql);
-        $stmt->execute([$uuid]);
-
-        $size = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $size ?: [];
+        return $this->fetchOne($sql, [$uuid]);
     }
 
     public function getSizeByName(string $name) : array
     {
         $sql = "SELECT * FROM sizes WHERE `name` = ?";
-
-        $stmt = parent::PrimayDB()->prepare($sql);
-        $stmt->execute([$name]);
-
-        $size = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $size ?: [];
+        return $this->fetchOne($sql, [$name]);
     }
-
+    
+    #
     public function checkNameSizeWithDifferentUUID(string $uuid, string $name) : bool
     {
         $sql = "SELECT uuid, `name` FROM sizes WHERE `name` = ? AND uuid != ? LIMIT 1";
@@ -122,5 +83,45 @@ class GetterProdutosModel extends Model
 
         return $size ? true : false;
     }
+
+    //=======================================================
+    //                                                      |
+    //                    Tabelas : colors                  |
+    //                                                      |
+    //=======================================================
+
+    public function getAllColors() : array
+    {
+        $sql = "SELECT * FROM colors";
+        return $this->fetchAll($sql);
+    }
+
+    public function getColorByUUID(string $uuid) : array
+    {
+        $sql = "SELECT * FROM colors WHERE uuid = ?";
+        return $this->fetchOne($sql, [$uuid]);
+    }
+
+    public function getColorByName(string $name) : array
+    {
+        $sql = "SELECT * FROM colors WHERE `name` = ?";
+        return $this->fetchOne($sql, [$name]);
+    }
+
+    // metodos auxiliares
+    private function fetchOne(string $sql, array $params): array
+    {
+        $stmt = parent::PrimayDB()->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+    }
+
+    private function fetchAll(string $sql, array $params = []): array
+    {
+        $stmt = parent::PrimayDB()->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
+
 
 }

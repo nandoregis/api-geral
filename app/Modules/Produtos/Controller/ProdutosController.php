@@ -105,6 +105,18 @@ class ProdutosController extends Controller
         ); 
     }
 
-    
+    //=================================================================================================
+    //
+    //                                          COLORS          
+    //
+    //=================================================================================================
+
+    public function getAllColors() {}
+
+    public function getcolorByUUID(string $uuid) {}
+
+    public function createColors(string $name, string $color_hex) {}
+
+
 
 }
