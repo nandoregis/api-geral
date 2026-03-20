@@ -39,7 +39,12 @@ class SetterProdutosController
             return Response::error(HttpCode::CONFLICT, "Já existe um produto com essa referência");
         }
 
-        return $this->setterProdutosModel->create($reference, $name);
+        $result = $this->setterProdutosModel->create($reference, $name);
+
+        if(!$result) return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para criar o produto");
+        
+        return Response::success(HttpCode::CREATED, "Produto criado com sucesso" ,$result);
+
     }
 
     public function update(object $req)
@@ -62,8 +67,12 @@ class SetterProdutosController
         {
             return Response::error(HttpCode::CONFLICT, "Já existe um produto com essa referência");
         }
+        
+        $result = $this->setterProdutosModel->update($uuid, $reference, $name);
 
-        return $this->setterProdutosModel->update($uuid, $reference, $name);
+        if(!$result) return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para atualizar o produto");
+
+        return Response::success(HttpCode::OK, "Produto atualizado com sucesso" ,$result);
 
     }
 

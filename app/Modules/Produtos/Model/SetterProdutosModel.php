@@ -2,7 +2,9 @@
 
 namespace app\Modules\Produtos\Model;
 
+use app\Core\HttpCode;
 use app\Core\UUID;
+use app\Factory\Response;
 use app\Model\Model;
 
 class SetterProdutosModel extends Model
@@ -33,15 +35,10 @@ class SetterProdutosModel extends Model
 
             return $this->getterProdutosModel->getByUUID($uuid);
 
-        } catch (\PDOException $e) {
-
-    
+        } catch (\PDOException $e) 
+        {
             error_log($e->getMessage());
-
-            return [
-                'error' => true,
-                'message' => 'Erro ao criar produto'
-            ];
+            return [];
         }
     }
 
@@ -62,13 +59,11 @@ class SetterProdutosModel extends Model
             
             return $this->getterProdutosModel->getByUUID($uuid);
             
-        }catch (\PDOException $e) {
+        }catch (\PDOException $e) 
+        {
             error_log($e->getMessage());
-
-            return [
-                'error' => true,
-                'message' => 'Erro ao editar produto'
-            ];
+            return [];
+        
         }
 
 
