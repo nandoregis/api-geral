@@ -97,6 +97,10 @@ class SetterProdutosController
 
         // verificar se tem item de tamanho com mesmo nome. ( não permitir );
 
+        if($this->getterProdutosModel->getSizeByName($name)) {
+            return Response::error(HttpCode::CONFLICT, "Já existe um tamanho com esse nome");
+        }
+
         $result = $this->setterProdutosModel->createSize($name);
 
         if(!$result){

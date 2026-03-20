@@ -11,9 +11,7 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "getAll",
                 "http" => ["GET"],
-                "middlewares" => [
-                    
-                ],
+                "middlewares" => [],
                 "active" => true
             ],
             [   
@@ -57,5 +55,19 @@ return [
                 "active" => true
             ]
         ]
+    ],
+    [
+        'static' => 'v1/sizes',
+        'routes' => [
+            [
+                "route" => "/",
+                "controller" => new ProdutosController,
+                "method" => "getAllSizes",
+                "http" => ["GET"],
+                "middlewares" => [],
+                "active" => true
+            ]
+        ]
+
     ]
 ];
