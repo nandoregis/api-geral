@@ -16,17 +16,17 @@ class Response {
     }
 
 
-    public static function error(int $code, string $message) : array
+    public static function error( int $code, string | array $message ) : array
     {
         return self::base(true, $code, $message);
     }
 
-    public static function success(int $code, string $message, array $data) : array
+    public static function success( int $code, string | array $message, array $data ) : array
     {
         return self::base(false, $code, $message, $data);
     }
 
-    private static function base( bool $error, int $code, string  $message, array $data = []) : array
+    private static function base( bool $error, int $code, string | array  $message, array $data = []) : array
     {
         return [
 

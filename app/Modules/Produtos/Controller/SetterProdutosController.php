@@ -29,7 +29,7 @@ class SetterProdutosController
         $this->productValidator->validateName($name);
 
         if ($this->productValidator->hasErrors()) 
-        {
+        {   
             return [
                 'error' => true,
                 'code' => HttpCode::UNAUTHORIZED,
