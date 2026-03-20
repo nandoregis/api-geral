@@ -78,7 +78,7 @@ return [
             [
                 "route" => "/c/create",
                 "controller" => new ProdutosController,
-                "method" => "getAllSizes",
+                "method" => "createSize",
                 "http" => ["POST"],
                 "middlewares" => [],
                 "active" => true
