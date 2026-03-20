@@ -10,7 +10,12 @@ class ProductValidator
     private $errors = [];
 
     public function validateReference(string | null $reference)
-    {
+    {   
+
+        if (Validation::noExist($reference)) {
+            $this->errors['refence'] = 'Paramentro não existe';
+            return false;
+        }
 
         if (Validation::isEmpty($reference)) {
             $this->errors['reference'] = 'Referência não pode ser vazia.';
@@ -25,9 +30,14 @@ class ProductValidator
         return true;
     }
 
-
     public function validateUUID(string | null $uuid)
-    {
+    {   
+
+        if (Validation::noExist($uuid)) {
+            $this->errors['uuid'] = 'Paramentro não existe';
+            return false;
+        }
+
         if (Validation::isEmpty($uuid)) {
             $this->errors['uuid'] = 'UUID não foi informado, é obrigatorio!';
             return false;
@@ -36,6 +46,11 @@ class ProductValidator
 
     public function validateName(string | null $name)
     {
+
+        if (Validation::noExist($name)) {
+            $this->errors['name'] = 'Paramentro não existe';
+            return false;
+        }
 
         if (Validation::isEmpty($name)) {
             $this->errors['name'] = 'nome não pode ser vazio.';

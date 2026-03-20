@@ -20,6 +20,12 @@ class Validation
     
     }
 
+    public static function noExist( mixed $value ) : bool
+    {
+        return !isset($value);
+    }
+
+
     public static function regex(string $value, string $pattern): bool
     {
         return preg_match($pattern, $value) === 1;
