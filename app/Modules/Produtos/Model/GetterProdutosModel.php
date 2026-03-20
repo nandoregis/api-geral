@@ -31,7 +31,7 @@ class GetterProdutosModel extends Model
         
     }
 
-    public function getByUUID(String $uuid) : array
+    public function getByUUID(string $uuid) : array
     {   
 
         $sql = "SELECT * FROM products WHERE uuid = ?";
@@ -44,7 +44,7 @@ class GetterProdutosModel extends Model
         return $product ?: [];
     }
 
-    public function getByReference(String $reference) : array
+    public function getByReference(string $reference) : array
     {   
 
         $sql = "SELECT * FROM products WHERE reference = ?";
@@ -56,4 +56,18 @@ class GetterProdutosModel extends Model
 
         return $product ?: [];
     }
+    
+    public function checkReferenceWithDifferentUUID(string $uuid, string $reference) : bool
+    {   
+
+        $sql = "SELECT uuid, reference FROM products WHERE reference = ? AND uuid != ? LIMIT 1";
+
+        $stmt = parent::PrimayDB()->prepare($sql);
+        $stmt->execute([$reference, $uuid]);
+
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $product ? true : false;
+
+    }   
 }

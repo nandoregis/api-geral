@@ -17,14 +17,20 @@ class GetterProdutosController
         return $this->getterProdutosModel->getAll();
     }
 
-    public function getByUUID(String $uuid)
+    public function getByUUID(string $uuid)
     {
         return $this->getterProdutosModel->getByUUID($uuid);
     }
 
-    public function getByReference(String $reference)
+    public function getByReference(string $reference)
     {
         return $this->getterProdutosModel->getByReference($reference);
+    }
+
+    //check Reference with Different UUID
+    public function checkReferenceWithDifferentUUID(string $uuid, string $reference)
+    {
+        return $this->getterProdutosModel->checkReferenceWithDifferentUUID($uuid, $reference);
     }
     
 
