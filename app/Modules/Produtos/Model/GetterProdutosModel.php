@@ -67,7 +67,37 @@ class GetterProdutosModel extends Model
         $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $product ? true : false;
-    }   
+    } 
+    
+    //=======================================================
+    //                                                      |
+    //                     Tabelas : sizes                  |
+    //                                                      |
+    //=======================================================
+
+    public function getAllSizes() : array
+    {
+        $sql = "SELECT * FROM sizes";
+
+        $stmt = parent::PrimayDB()->prepare($sql);
+        $stmt->execute();
+
+        $sizes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $sizes ?: [];
+    }
+
+    public function getSizeByUUID(string $uuid) : array
+    {
+        $sql = "SELECT * FROM sizes WHERE uuid = ?";
+
+        $stmt = parent::PrimayDB()->prepare($sql);
+        $stmt->execute();
+
+        $size = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $size ?: [];
+    }
 
     public function checkNameSizeWithDifferentUUID(string $uuid, string $name) : bool
     {
