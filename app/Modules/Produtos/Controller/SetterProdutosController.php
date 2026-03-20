@@ -76,5 +76,39 @@ class SetterProdutosController
 
     }
 
+    public function delete(string $uuid) {}
+
+    public function saleProducts() {}
+
+    public function stockProductEntry() {}
+
+    public function stockProductExit() {}
+
+    public function createSize(object $req) 
+    {
+    
+        $name = $req->input('name');
+        
+        $this->productValidator->validateName($name);
+
+        if ($this->productValidator->hasErrors()) {
+            return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
+        }
+
+        // verificar se tem item de tamanho com mesmo nome. ( não permitir );
+
+        $result = $this->setterProdutosModel->createSize($name);
+
+        if(!$result){
+            return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um problema para criar o tamanho");
+        }
+
+        return Response::success(HttpCode::CREATED, "Tamanho criado com sucesso", $result);
+        
+    }
+
+    public function createColors(string $name, string $color_hex) {}
+
+    public function createProductVariations() {}
 
 }

@@ -1,3 +1,8 @@
-# PROJETO UTILIZADO PHP ROUTER : https://phprouter.com
+# TODO
+### FAZER ALTERAÇÃO DE PRECISAR DA GRADE DO TAMANHO PARA PODER CRIAR O PRODUTO INTERLIGAÇÃO PRODUTOS_VARIATIONS - COM SIZE OU NO AVULSO.
 
-Projeto utilizando arquitetura MVC modular MVC, com rotas separadas em arquivo route.php que retorna um array com informações necessaria.
+
+### FAZER ENDPOINT DE CRIAR SIZE, DOS PRODUTOS
+
+
+### FAZER ENDPOINT DE DELETAR PRODUTOS
