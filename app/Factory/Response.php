@@ -14,4 +14,27 @@ class Response {
         }
         echo $this->body;
     }
+
+
+    public static function error(int $code, string $message) : array
+    {
+        return self::base(true, $code, $message);
+    }
+
+    public static function success(int $code, string $message, array $data) : array
+    {
+        return self::base(false, $code, $message, $data);
+    }
+
+    private static function base( bool $error, int $code, string  $message, array $data = []) : array
+    {
+        return [
+
+            'error' => $error,
+            'code' => $code,
+            'message' => $message,
+            'data' => $data
+        ];
+    }
+    
 }

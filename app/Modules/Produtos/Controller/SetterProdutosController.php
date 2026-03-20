@@ -31,7 +31,7 @@ class SetterProdutosController
         if ($this->productValidator->hasErrors()) 
         {
             return [
-                'status' => false,
+                'error' => true,
                 'code' => HttpCode::UNAUTHORIZED,
                 'message' => $this->productValidator->getErrors()
             ];
@@ -40,7 +40,7 @@ class SetterProdutosController
         if( $this->getterProdutosModel->getByReference($reference) ) 
         {
             return [
-                'status' => false,
+                'error' => true,
                 'code' => HttpCode::CONFLICT,
                 'message' => "Já existe um produto com essa referência"
             ];
@@ -57,13 +57,14 @@ class SetterProdutosController
         $reference = $req->input('reference');
         $name = $req->input('name');
         
-        $this->productValidator->validateReference($reference);
+        $this->productValidator->validateUUID($uuid);
         $this->productValidator->validateName($name);
+        $this->productValidator->validateReference($reference);
 
         if ($this->productValidator->hasErrors()) 
         {
             return [
-                'status' => false,
+                'error' => true,
                 'code' => HttpCode::UNAUTHORIZED,
                 'message' => $this->productValidator->getErrors()
             ];
@@ -72,7 +73,7 @@ class SetterProdutosController
         if( $this->getterProdutosModel->checkReferenceWithDifferentUUID($uuid, $reference) ) 
         {
             return [
-                'status' => false,
+                'error' => true,
                 'code' => HttpCode::CONFLICT,
                 'message' => "Já existe um produto com essa referência"
             ];

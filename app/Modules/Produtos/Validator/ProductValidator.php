@@ -25,6 +25,15 @@ class ProductValidator
         return true;
     }
 
+
+    public function validateUUID(string | null $uuid)
+    {
+        if (Validation::isEmpty($uuid)) {
+            $this->errors['uuid'] = 'UUID não foi informado, é obrigatorio!';
+            return false;
+        }
+    }
+
     public function validateName(string | null $name)
     {
 
@@ -40,7 +49,6 @@ class ProductValidator
 
         return true;
     }
-
 
     public function getErrors()
     {
