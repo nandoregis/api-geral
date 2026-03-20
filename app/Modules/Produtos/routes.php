@@ -66,6 +66,22 @@ return [
                 "http" => ["GET"],
                 "middlewares" => [],
                 "active" => true
+            ],
+            [
+                "route" => "/{uuid}",
+                "controller" => new ProdutosController,
+                "method" => "getSizeByUUID",
+                "http" => ["GET"],
+                "middlewares" => [],
+                "active" => true
+            ],
+            [
+                "route" => "/c/create",
+                "controller" => new ProdutosController,
+                "method" => "getAllSizes",
+                "http" => ["POST"],
+                "middlewares" => [],
+                "active" => true
             ]
         ]
 

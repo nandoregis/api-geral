@@ -96,4 +96,15 @@ class ProdutosController extends Controller
         );
     }
 
+    public function createSize(object $req) 
+    {
+        $response = $this->setterProdutosController->createSize($req);
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED),
+            $response
+        ); 
+    }
+
+    
+
 }
