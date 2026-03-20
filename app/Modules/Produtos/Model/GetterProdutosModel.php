@@ -59,7 +59,6 @@ class GetterProdutosModel extends Model
     
     public function checkReferenceWithDifferentUUID(string $uuid, string $reference) : bool
     {   
-
         $sql = "SELECT uuid, reference FROM products WHERE reference = ? AND uuid != ? LIMIT 1";
 
         $stmt = parent::PrimayDB()->prepare($sql);
@@ -68,6 +67,18 @@ class GetterProdutosModel extends Model
         $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $product ? true : false;
-
     }   
+
+    public function checkNameSizeWithDifferentUUID(string $uuid, string $name) : bool
+    {
+        $sql = "SELECT uuid, `name` FROM sizes WHERE `name` = ? AND uuid != ? LIMIT 1";
+
+        $stmt = parent::PrimayDB()->prepare($sql);
+        $stmt->execute([$name, $uuid]);
+
+        $size = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $size ? true : false;
+    }
+
 }

@@ -35,6 +35,11 @@ class GetterProdutosController
     {
         return $this->getterProdutosModel->checkReferenceWithDifferentUUID($uuid, $reference);
     }
+
+    public function checkNameSizeWithDifferentUUID(string $uuid, string $name)
+    {
+        return $this->getterProdutosModel->checkNameSizeWithDifferentUUID($uuid, $name);
+    }
     
     
 }
