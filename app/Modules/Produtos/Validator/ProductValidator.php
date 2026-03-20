@@ -13,7 +13,7 @@ class ProductValidator
     {   
 
         if (Validation::noExist($reference)) {
-            $this->errors['refence'] = 'Paramentro não existe';
+            $this->errors['reference'] = 'Não está com o parametro reference, faça a correção.';
             return false;
         }
 
@@ -34,7 +34,7 @@ class ProductValidator
     {   
 
         if (Validation::noExist($uuid)) {
-            $this->errors['uuid'] = 'Paramentro não existe';
+            $this->errors['uuid'] = 'Não está com o parametro uuid, faça a correção.';
             return false;
         }
 
@@ -48,7 +48,7 @@ class ProductValidator
     {
 
         if (Validation::noExist($name)) {
-            $this->errors['name'] = 'Paramentro não existe';
+            $this->errors['name'] = 'Não está com o parametro name, faça a correção.';
             return false;
         }
 
