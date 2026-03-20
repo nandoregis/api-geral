@@ -9,7 +9,7 @@ return [
             [   
                 "route" => "/",
                 "controller" => new ProdutosController,
-                "method" => "index",
+                "method" => "getAll",
                 "http" => ["GET"],
                 "middlewares" => [
                     

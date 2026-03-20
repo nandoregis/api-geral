@@ -20,7 +20,7 @@ class ProdutosController extends Controller
         $this->setterProdutosController = new SetterProdutosController;
     }
 
-    public function index()
+    public function getAll()
     {   
         return parent::apiView(HttpCode::OK, $this->getterProdutosController->all() );
     }
