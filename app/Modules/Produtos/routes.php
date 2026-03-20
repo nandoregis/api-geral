@@ -45,6 +45,16 @@ return [
                     
                 ],
                 "active" => true
+            ],
+            [   
+                "route" => "/u/update",
+                "controller" => new ProdutosController,
+                "method" => "update",
+                "http" => ["POST"],
+                "middlewares" => [
+                    
+                ],
+                "active" => true
             ]
         ]
     ]
