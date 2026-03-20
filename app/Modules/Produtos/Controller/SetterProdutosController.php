@@ -3,6 +3,7 @@
 namespace app\Modules\Produtos\Controller;
 
 use app\Core\HttpCode;
+use app\Factory\Response;
 use app\Modules\Produtos\Model\GetterProdutosModel;
 use app\Modules\Produtos\Model\SetterProdutosModel;
 use app\Modules\Produtos\Validator\ProductValidator;
@@ -30,29 +31,20 @@ class SetterProdutosController
 
         if ($this->productValidator->hasErrors()) 
         {   
-            return [
-                'error' => true,
-                'code' => HttpCode::UNAUTHORIZED,
-                'message' => $this->productValidator->getErrors()
-            ];
+            return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
         }
 
         if( $this->getterProdutosModel->getByReference($reference) ) 
-        {
-            return [
-                'error' => true,
-                'code' => HttpCode::CONFLICT,
-                'message' => "Já existe um produto com essa referência"
-            ];
+        {   
+            return Response::error(HttpCode::CONFLICT, "Já existe um produto com essa referência");
         }
-
 
         return $this->setterProdutosModel->create($reference, $name);
     }
 
     public function update(object $req)
     { 
-        // reference, name, : uuid
+        
         $uuid = $req->input('uuid');
         $reference = $req->input('reference');
         $name = $req->input('name');
@@ -61,24 +53,15 @@ class SetterProdutosController
         $this->productValidator->validateName($name);
         $this->productValidator->validateReference($reference);
 
-        if ($this->productValidator->hasErrors()) 
-        {
-            return [
-                'error' => true,
-                'code' => HttpCode::UNAUTHORIZED,
-                'message' => $this->productValidator->getErrors()
-            ];
+         if ($this->productValidator->hasErrors()) 
+        {   
+            return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
         }
 
         if( $this->getterProdutosModel->checkReferenceWithDifferentUUID($uuid, $reference) ) 
         {
-            return [
-                'error' => true,
-                'code' => HttpCode::CONFLICT,
-                'message' => "Já existe um produto com essa referência"
-            ];
+            return Response::error(HttpCode::CONFLICT, "Já existe um produto com essa referência");
         }
-        
 
         return $this->setterProdutosModel->update($uuid, $reference, $name);
 
