@@ -85,6 +85,26 @@ class ProductValidator
         return true;
     }
 
+    public function validateColorHex(string | null $color_hex)
+    {
+        if (Validation::noExist($color_hex)) {
+            $this->errors['color_hex'] = 'Não está com o parametro color_hex, faça a correção.';
+            return false;
+        }
+
+        if(Validation::isEmpty($color_hex)) {
+            $this->errors['color_hex'] = 'color_hex não pode ser vazio.';
+            return false;
+        }
+
+        if(!Validation::regex($color_hex, ProductRules::COLOR_HEX)) {
+            $this->errors['color_hex'] = 'color_hex fora do formato esperado, formato correto #FFFFFF';
+            return false;
+        }
+
+        
+    }
+
     public function getErrors()
     {
         return $this->errors;

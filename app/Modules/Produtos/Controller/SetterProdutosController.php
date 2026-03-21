@@ -117,6 +117,7 @@ class SetterProdutosController
         $color_hex = $req->input('color_hex');
         
         $this->productValidator->validateName($name);
+        $this->productValidator->validateColorHex($color_hex);
 
         if ($this->productValidator->hasErrors()) {
             return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());

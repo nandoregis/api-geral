@@ -112,7 +112,7 @@ class SetterProdutosModel extends Model
     {
         $uuid = UUID::v4();
 
-        $sql = "INSERT INTO `colors` (uuid, `name`, 'color_hex', created_at)
+        $sql = "INSERT INTO `colors` (uuid, `name`, color_hex, created_at)
             VALUES (:uuid, :name, :color_hex, NOW())";
 
         try {

@@ -92,7 +92,7 @@ return [
             [
                 "route" => "/",
                 "controller" => new ProdutosController,
-                "method" => "createSize",
+                "method" => "getAllColors",
                 "http" => ["GET"],
                 "middlewares" => [],
                 "active" => true
