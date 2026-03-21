@@ -62,6 +62,23 @@ class ProductValidator
 
     }
 
+    public function validatePrice(string | null $price)
+    {
+
+        return $this->baseValidate(
+            fn() => $this->helpBaseValidate('price', fn() => Validation::noExist($price), 'Não está com o parametro price, faça a correção.'),
+            fn() => $this->helpBaseValidate('price', fn() => Validation::isEmpty($price), 'price não pode ser vazio.'),
+            fn() => $this->helpBaseValidate('price', fn() => !Validation::regex($price, ProductRules::PRICE), 'price fora do formato esperado')
+        );
+
+    }
+
+    /** ===========================================
+     * 
+     *  metodo de callback
+     * 
+     * ============================================
+     */
     private function baseValidate(callable ...$args) : bool
     {
         foreach ($args as $arg) { if($arg()) return false; }
@@ -82,6 +99,8 @@ class ProductValidator
 
         return false;
     }
+
+    //===========================================================
 
     public function getErrors()
     {

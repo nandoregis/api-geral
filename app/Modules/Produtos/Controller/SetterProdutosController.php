@@ -32,6 +32,9 @@ class SetterProdutosController
         
         $this->productValidator->validateReference($reference);
         $this->productValidator->validateName($name);
+        $this->productValidator->validateUUID($size_uuid);
+        $this->productValidator->validateUUID($color_uuid);
+        $this->productValidator->validatePrice($price);
 
         if ($this->productValidator->hasErrors()) 
         {   
