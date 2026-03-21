@@ -85,5 +85,50 @@ return [
             ]
         ]
 
+    ],
+    [
+        'static' => 'v1/colors',
+        'routes' => [
+            [
+                "route" => "/",
+                "controller" => new ProdutosController,
+                "method" => "createSize",
+                "http" => ["GET"],
+                "middlewares" => [],
+                "active" => true
+            ],
+            [
+                "route" => "/{uuid}",
+                "controller" => new ProdutosController,
+                "method" => "getColorByUUID",
+                "http" => ["GET"],
+                "middlewares" => [],
+                "active" => true
+            ],
+            [
+                "route" => "/c/create",
+                "controller" => new ProdutosController,
+                "method" => "createColors",
+                "http" => ["POST"],
+                "middlewares" => [],
+                "active" => true
+            ],
+            [
+                "route" => "/u/update",
+                "controller" => new ProdutosController,
+                "method" => "updateColors",
+                "http" => ["POST"],
+                "middlewares" => [],
+                "active" => true
+            ],
+            [
+                "route" => "/d/delete",
+                "controller" => new ProdutosController,
+                "method" => "deleteColors",
+                "http" => ["POST"],
+                "middlewares" => [],
+                "active" => true
+            ]
+        ]
     ]
 ];

@@ -117,6 +117,10 @@ class ProdutosController extends Controller
 
     public function createColors(string $name, string $color_hex) {}
 
+    public function updateColors(string $uuid, string $name, string $color_hex) {}
+
+    public function deleteColors(string $uuid) {}
+
 
 
 }
