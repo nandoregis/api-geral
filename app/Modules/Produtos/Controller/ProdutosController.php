@@ -105,21 +105,43 @@ class ProdutosController extends Controller
         ); 
     }
 
+    public function updateSize(object $req) {}
+
+    public function deleteSize(object $req) {}
+
     //=================================================================================================
     //
     //                                          COLORS          
     //
     //=================================================================================================
 
-    public function getAllColors() {}
+    public function getAllColors() {
+        $response = $this->getterProdutosController->getAllColors();
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
 
-    public function getcolorByUUID(string $uuid) {}
+    public function getColorByUUID(object $req) {
+        $response = $this->getterProdutosController->getColorByUUID($req);
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
 
-    public function createColors(string $name, string $color_hex) {}
+    public function createColors(object $req) {
+        $response = $this->setterProdutosController->createColors($req);
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED),
+            $response
+        );
+    }
 
-    public function updateColors(string $uuid, string $name, string $color_hex) {}
+    public function updateColors(object $req) {}
 
-    public function deleteColors(string $uuid) {}
+    public function deleteColors(object $req) {}
 
 
 

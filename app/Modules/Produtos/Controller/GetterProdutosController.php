@@ -54,7 +54,25 @@ class GetterProdutosController
         return $this->getterProdutosModel->checkNameSizeWithDifferentUUID($uuid, $name);
     }
 
+    //=======================================================
+    //                                                      |
+    //                    Tabelas : colors                  |
+    //                                                      |
+    //=======================================================
 
-    
+    public function getAllColors() 
+    {
+        return Response::success(200, "Todos as cores", $this->getterProdutosModel->getAllColors());
+    }
+
+    public function getColorByUUID(object $req) 
+    {
+        return Response::success(200, "Cor pego pelo UUID", $this->getterProdutosModel->getColorByUUID($req->input('uuid')));
+    }
+
+    public function checkNameColorWithDifferentUUID (string $uuid, string $name) 
+    {
+        return $this->getterProdutosModel->checkNameColorWithDifferentUUID($uuid, $name);
+    }
     
 }
