@@ -26,7 +26,7 @@ class Validation
     }
 
 
-    public static function regex(string $value, string $pattern): bool
+    public static function regex( ? string $value, string $pattern): bool
     {
         return preg_match($pattern, $value) === 1;
     }

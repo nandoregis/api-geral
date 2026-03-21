@@ -10,134 +10,77 @@ class ProductValidator
     private $errors = [];
 
     public function validateReference(string | null $reference)
-    {   
+    {    
 
-        if (Validation::noExist($reference)) {
-            $this->errors['reference'] = 'Não está com o parametro reference, faça a correção.';
-            return false;
-        }
-
-        if (Validation::isEmpty($reference)) {
-            $this->errors['reference'] = 'Referência não pode ser vazia.';
-            return false;
-        }
-
-        if (!Validation::regex($reference, ProductRules::REFERENCE)) {
-            $this->errors['reference'] = 'Referência fora do formato esperado.';
-            return false;
-        }
-
-        return true;
+        return $this->baseValidate(
+            fn() => $this->helpBaseValidate('reference', fn() => Validation::noExist($reference), 'Não está com o parametro reference, faça a correção.'),
+            fn() => $this->helpBaseValidate('reference', fn() => Validation::isEmpty($reference), 'Referência não pode ser vazia.'),
+            fn() => $this->helpBaseValidate('reference', fn() => !Validation::regex($reference, ProductRules::REFERENCE), 'Referência fora do formato esperado.')
+        );
+        
     }
 
     public function validateUUID(string | null $uuid)
     {   
 
-        if (Validation::noExist($uuid)) {
-            $this->errors['uuid'] = 'Não está com o parametro uuid, faça a correção.';
-            return false;
-        }
+        return $this->baseValidate(
+            fn() => $this->helpBaseValidate('uuid', fn() => Validation::noExist($uuid), 'Não está com o parametro uuid, faça a correção.'),
+            fn() => $this->helpBaseValidate('uuid', fn() => Validation::isEmpty($uuid), 'UUID não foi informado, é obrigatorio!'),
+        );
 
-        if (Validation::isEmpty($uuid)) {
-            $this->errors['uuid'] = 'UUID não foi informado, é obrigatorio!';
-            return false;
-        }
     }
 
     public function validateName(string | null $name)
     {
 
-        if (Validation::noExist($name)) {
-            $this->errors['name'] = 'Não está com o parametro name, faça a correção.';
-            return false;
-        }
-
-        if (Validation::isEmpty($name)) {
-            $this->errors['name'] = 'nome não pode ser vazio.';
-            return false;
-        }
-
-        if (!Validation::regex($name, ProductRules::NAME)) {
-            $this->errors['name'] = 'nome fora do formato esperado.';
-            return false;
-        }
-
-        return true;
+        return $this->baseValidate(
+            fn() => $this->helpBaseValidate('name', fn() => Validation::noExist($name), 'Não está com o parametro name, faça a correção.'),
+            fn() => $this->helpBaseValidate('name', fn() => Validation::isEmpty($name), 'nome não pode ser vazio.'),
+            fn() => $this->helpBaseValidate('name', fn() => !Validation::regex($name, ProductRules::NAME), 'nome fora do formato esperado')
+        );
     }
 
     public function validateNameSize(string | null $name)
     {
-        if (Validation::noExist($name)) {
-            $this->errors['name'] = 'Não está com o parametro name, faça a correção.';
-            return false;
-        }
+        
+        return $this->baseValidate(
+            fn() => $this->helpBaseValidate('name', fn() => Validation::noExist($name), 'Não está com o parametro name, faça a correção.'),
+            fn() => $this->helpBaseValidate('name', fn() => Validation::isEmpty($name), 'nome não pode ser vazio.'),
+            fn() => $this->helpBaseValidate('name', fn() => !Validation::regex($name, ProductRules::NAME_SIZE), 'nome fora do formato esperado')
+        );
 
-        if (Validation::isEmpty($name)) {
-            $this->errors['name'] = 'nome não pode ser vazio.';
-            return false;
-        }
-
-        if (!Validation::regex($name, ProductRules::NAME_SIZE)) {
-            $this->errors['name'] = 'nome fora do formato esperado.';
-            return false;
-        }
-
-        return true;
     }
 
     public function validateColorHex(string | null $color_hex)
     {
-        if (Validation::noExist($color_hex)) {
-            $this->errors['color_hex'] = 'Não está com o parametro color_hex, faça a correção.';
-            return false;
-        }
 
-        if(Validation::isEmpty($color_hex)) {
-            $this->errors['color_hex'] = 'color_hex não pode ser vazio.';
-            return false;
-        }
-
-        if(!Validation::regex($color_hex, ProductRules::COLOR_HEX)) {
-            $this->errors['color_hex'] = 'color_hex fora do formato esperado, formato correto #FFFFFF';
-            return false;
-        }
-
-        // $this->baseValideInterface(
-        //     'color_hex',
-        //     $color_hex, 
-        //     [Validation::class, 'noExist'], 
-        //     'Não está com o parametro color_hex, faça a correção.'
-        // );
+        return $this->baseValidate(
+            fn() => $this->helpBaseValidate('color_hex', fn() => Validation::noExist($color_hex), 'Não está com o parametro color_hex, faça a correção.'),
+            fn() => $this->helpBaseValidate('color_hex', fn() => Validation::isEmpty($color_hex), 'color_hex não pode ser vazio.'),
+            fn() => $this->helpBaseValidate('color_hex', fn() => !Validation::regex($color_hex, ProductRules::COLOR_HEX), 'color_hex fora do formato esperado, formato correto #FFFFFF.')
+        );
 
     }
 
-    private function baseValidate(callable ...$args)
+    private function baseValidate(callable ...$args) : bool
     {
-        foreach ($args as $arg) 
-        {
-            if($arg()) {
-                return false;
-            }
-        }
+        foreach ($args as $arg) { if($arg()) return false; }
+        return true;
     }
 
-    private function baseValideInterface (
-        string $description, 
-        string $valide, 
-        callable $validationMethod, 
-        string $errorMessage
-    ) 
-    {
-        if( $validationMethod($valide) ) {
-            $this->errors[$description] = $errorMessage;
-            return false;
-        }
-    }
+    // retornar verdadeiro se houver erro.
+    private function helpBaseValidate(
+        string $description,
+        callable $fn,
+        string $messageError
+    ) {
 
-    // helper
-    private function not(callable $fn) : callable
-    {
-        return fn($val) => !$fn($val);
+        if($fn()) {
+            $this->errors[$description] = $messageError;
+            return true;
+        }
+
+        return false;
     }
 
     public function getErrors()
