@@ -114,6 +114,7 @@ class SetterProdutosController
     public function createColors(object $req) {
 
         $name = $req->input('name');
+        $color_hex = $req->input('color_hex');
         
         $this->productValidator->validateName($name);
 
@@ -121,8 +122,17 @@ class SetterProdutosController
             return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
         }
 
-        
+        if ($this->getterProdutosModel->getColorByName($name)) {
+            return Response::error(HttpCode::CONFLICT, "Já existe uma cor com esse nome");
+        }
 
+        $result = $this->setterProdutosModel->createColors($name, $color_hex);
+
+        if(!$result) {
+            return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um problema para criar a cor");
+        }
+
+        return Response::success(HttpCode::CREATED, "Cor criada com sucesso", $result);
     }
 
     public function createProductVariations() {}
