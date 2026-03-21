@@ -20,6 +20,12 @@ class ProdutosController extends Controller
         $this->setterProdutosController = new SetterProdutosController;
     }
 
+    //=========================================================================
+    //
+    //                                 PRODUCTS          
+    //
+    //=========================================================================
+
     public function getAll()
     {   
         $response = $this->getterProdutosController->all();
@@ -68,7 +74,11 @@ class ProdutosController extends Controller
 
     public function delete(object $req) {}
 
-    //==========================================================================
+    //=========================================================================
+    //
+    //                                 SALES          
+    //
+    //=========================================================================
 
     public function saleProducts() {}
 
@@ -76,8 +86,11 @@ class ProdutosController extends Controller
 
     public function stockProductExit() {}
 
-    //==========================================================================
-
+    //=========================================================================
+    //
+    //                                 SIZES          
+    //
+    //=========================================================================
     public function getAllSizes()
     {
         $response = $this->getterProdutosController->getAllSizes();
