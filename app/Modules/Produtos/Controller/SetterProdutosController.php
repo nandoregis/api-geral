@@ -22,9 +22,13 @@ class SetterProdutosController
 
     public function create(object $req)
     {   
-        
+        // size:uuid, color_uuid ( validar e verificar no db)
+        // price, input = 45,55  ( validar e formatar) output 45.55
         $reference = $req->input('reference');
         $name = $req->input('name');
+        $size_uuid = $req->input('size_uuid');
+        $color_uuid = $req->input('color_uuid');
+        $price = $req->input('price');
         
         $this->productValidator->validateReference($reference);
         $this->productValidator->validateName($name);
@@ -37,6 +41,16 @@ class SetterProdutosController
         if( $this->getterProdutosModel->getByReference($reference) ) 
         {   
             return Response::error(HttpCode::CONFLICT, "Já existe um produto com essa referência");
+        }
+
+        // validar UUIDs se existem
+
+        if(!$this->getterProdutosModel->getSizeByUUID($size_uuid)) {
+            return Response::error(HttpCode::CONFLICT, "Não foi possivel identicar esse tamanho");
+        }
+
+        if(!$this->getterProdutosModel->getColorByUUID($color_uuid) ) {
+            return Response::error(HttpCode::CONFLICT, "Não foi possivel identicar essa cor");
         }
 
         $result = $this->setterProdutosModel->create($reference, $name);

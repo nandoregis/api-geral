@@ -102,7 +102,42 @@ class ProductValidator
             return false;
         }
 
-        
+        // $this->baseValideInterface(
+        //     'color_hex',
+        //     $color_hex, 
+        //     [Validation::class, 'noExist'], 
+        //     'Não está com o parametro color_hex, faça a correção.'
+        // );
+
+    }
+
+    private function baseValidate(callable ...$args)
+    {
+        foreach ($args as $arg) 
+        {
+            if($arg()) {
+                return false;
+            }
+        }
+    }
+
+    private function baseValideInterface (
+        string $description, 
+        string $valide, 
+        callable $validationMethod, 
+        string $errorMessage
+    ) 
+    {
+        if( $validationMethod($valide) ) {
+            $this->errors[$description] = $errorMessage;
+            return false;
+        }
+    }
+
+    // helper
+    private function not(callable $fn) : callable
+    {
+        return fn($val) => !$fn($val);
     }
 
     public function getErrors()
