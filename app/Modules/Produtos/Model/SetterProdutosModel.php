@@ -16,6 +16,9 @@ class SetterProdutosModel extends Model
         $this->getterProdutosModel = new GetterProdutosModel;
     }
 
+    /**
+     *  Create : produtos
+     */
     public function create(string $reference, string $name): array
     {         
         
