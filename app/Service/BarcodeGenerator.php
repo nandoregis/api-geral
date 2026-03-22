@@ -8,10 +8,10 @@ class BarcodeGenerator
     {
         $code = $prefix;
         while(strlen($code) < 12) $code .= random_int(0,9);
-        return $code . self::checkDigit($code);
+        return $code . self::calculateCheckDigit($code);
     }
 
-    private static function checkDigit(string $code) : int
+    private static function calculateCheckDigit(string $code) : int
     {
         $sum = 0;
         for($i = 0; $i < strlen($code); $i++) 
