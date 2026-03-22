@@ -135,11 +135,10 @@ class GetterProdutosModel extends Model
         return $this->fetchAll($sql, [$sale_uuid]);
     }
 
-    public function getSaleItemsBySaleUUIDVariationUUID(string $sale_uuid, string $variation_uuid) : bool
+    public function getSaleItemsBySaleUUIDVariationUUID(string $sale_uuid, string $variation_uuid) : array
     {
         $sql = "SELECT * FROM sale_itens WHERE sale_uuid = ? AND variation_uuid = ? LIMIT 1";
-        $data = $this->fetchOne($sql, [$sale_uuid, $variation_uuid]);
-        return $data ? true : false;
+        return $this->fetchOne($sql, [$sale_uuid, $variation_uuid]);
     }
       
     //=======================================================
