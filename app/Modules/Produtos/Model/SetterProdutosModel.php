@@ -49,10 +49,14 @@ class SetterProdutosModel extends Model
     public function update(string $uuid, string $reference, string $name) : array
     {
         
-        $sql = "UPDATE products SET reference = :reference, `name` = :name WHERE uuid = :uuid";
+        $pdo = parent::PrimayDB();
+        $pdo->beginTransaction();
 
+        $sql = "UPDATE products SET reference = :reference, `name` = :name WHERE uuid = :uuid";
+        
         try {
-            $stmt = parent::PrimayDB()->prepare($sql);
+
+            $stmt = $pdo->prepare($sql);
             
             $stmt->bindValue(':reference', $reference);
             $stmt->bindValue(':name', $name);
@@ -74,9 +78,13 @@ class SetterProdutosModel extends Model
     public function delete(string $uuid) {}
 
     // metodo auxiliar de criação do produto.
-    private function createProductVariations(string $product_uuid, string $size_uuid, string $color_uuid, string $price) 
+    private function createProductVariations(string $product_uuid, array $variations) : array
     {
         $uuid = UUID::v4();
+        $sql = "INSERT INTO product_variations (uuid, product_uuid, size_uuid, color_uuid, barcode, price, created_at)
+            VALUES (:uuid, :product_uuid, :size_uuid, :color_uuid, :barcode, :price, NOW())";
+        
+        return [];  
     }
 
     public function saleProducts() {}

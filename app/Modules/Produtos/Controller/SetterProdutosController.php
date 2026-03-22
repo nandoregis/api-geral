@@ -26,12 +26,30 @@ class SetterProdutosController
      
         $reference = $req->input('reference');
         $name = $req->input('name');
-        $price = $req->input('price');
         $variations = $req->input('variations');
         
         $this->productValidator->validateReference($reference);
         $this->productValidator->validateName($name);
-        $this->productValidator->validatePrice($price);
+
+        // verificões de UUID das tabelas sizes e colors
+        for ($i=0; $i < count($variations); $i++) 
+        { 
+            $size_uuid = $variations[$i]['size_uuid'];
+            $color_uuid = $variations[$i]['color_uuid'];
+            $price = $variations[$i]['price'];
+
+            if(!$this->getterProdutosModel->getSizeByUUID($size_uuid)) {
+                return Response::error(HttpCode::CONFLICT, "Não foi possivel identicar esse tamanho, verificar o uuid do tamanho");
+            }
+    
+            if(!$this->getterProdutosModel->getColorByUUID($color_uuid) ) {
+                return Response::error(HttpCode::CONFLICT, "Não foi possivel identicar essa cor, verificar o uuid da cor");
+            }
+
+            $this->productValidator->validatePrice($price);
+            $variations[$i]['price'] = ProductHelper::price_format($price);
+
+        }
 
         if ($this->productValidator->hasErrors()) 
         {   
@@ -43,23 +61,6 @@ class SetterProdutosController
             return Response::error(HttpCode::CONFLICT, "Já existe um produto com essa referência");
         }
 
-        // validar UUIDs se existem
-
-        for ($i=0; $i < count($variations); $i++) 
-        { 
-            $size_uuid = $variations[$i]['size_uuid'];
-            $color_uuid = $variations[$i]['color_uuid'];
-
-            if(!$this->getterProdutosModel->getSizeByUUID($size_uuid)) {
-                return Response::error(HttpCode::CONFLICT, "Não foi possivel identicar esse tamanho, verificar o uuid do tamanho");
-            }
-    
-            if(!$this->getterProdutosModel->getColorByUUID($color_uuid) ) {
-                return Response::error(HttpCode::CONFLICT, "Não foi possivel identicar essa cor, verificar o uuid da cor");
-            }
-        }
-
-        $price = ProductHelper::price_format($price); // formatar para o padrão de banco
 
         $result = $this->setterProdutosModel->create($reference, $name);
 
