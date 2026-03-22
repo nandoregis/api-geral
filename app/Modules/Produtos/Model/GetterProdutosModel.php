@@ -104,6 +104,30 @@ class GetterProdutosModel extends Model
         $data = $this->fetchOne($sql, [$name, $uuid]);
         return $data ? true : false;
     }
+
+    //=======================================================
+    //                                                      |
+    //                  METODOS SALE                        |
+    //                                                      |
+    //=======================================================
+
+    public function getAllSales() : array
+    {
+        $sql = "SELECT * FROM sales";
+        return $this->fetchAll($sql);
+    }
+
+    public function getSaleByUUID(string $uuid) : array
+    {
+        $sql = "SELECT * FROM sales WHERE uuid = ?";
+        return $this->fetchOne($sql, [$uuid]);
+    }
+
+    public function getSaleByUUIDUser(string $uuid_user) : array
+    {   
+        $sql = "SELECT * FROM sales WHERE uuid_user = ?";
+        return $this->fetchOne($sql, [$uuid_user]);
+    }
       
     //=======================================================
     //                                                      |
