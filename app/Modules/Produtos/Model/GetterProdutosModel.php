@@ -131,7 +131,38 @@ class GetterProdutosModel extends Model
 
     public function getSaleItemsBySaleUUID(string $sale_uuid) : array
     {
-        $sql = "SELECT * FROM sale_items WHERE sale_uuid = ?";
+        $sql = "SELECT 
+            si.uuid,
+            si.sale_uuid,
+            p.uuid AS product_uuid,
+            pv.uuid AS variation_uuid,
+            s.uuid AS size_uuid,
+            c.uuid AS color_uuid,
+            
+            p.name AS product_name,
+            s.name AS size_name,
+            c.name AS color_name,
+            c.color_hex,
+            si.quantity,
+            si.price
+
+            FROM sale_items si
+
+            INNER JOIN products p 
+                ON p.uuid = si.product_uuid
+
+            INNER JOIN product_variations pv 
+                ON pv.uuid = si.variation_uuid
+
+            INNER JOIN sizes s 
+                ON s.uuid = pv.size_uuid
+
+            INNER JOIN colors c 
+                ON c.uuid = pv.color_uuid
+
+            WHERE si.sale_uuid = ?
+        ";
+
         return $this->fetchAll($sql, [$sale_uuid]);
     }
 
