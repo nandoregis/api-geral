@@ -61,7 +61,6 @@ class SetterProdutosController
             return Response::error(HttpCode::CONFLICT, "Já existe um produto com essa referência");
         }
 
-
         $result = $this->setterProdutosModel->create($reference, $name, $variations);
 
         if(!$result) return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para criar o produto");
@@ -128,43 +127,48 @@ class SetterProdutosController
         return Response::success(HttpCode::CREATED, "Nova venda criada!", $result);
     }
 
-    public function addProductInSale(object $req) {
+    public function addProductInSale(object $req) 
+    {
 
         $sale_uuid = $req->input('sale_uuid');
         $product_uuid = $req->input('product_uuid');
-        $variation_uuid = $req->input('variation_uuid');
-        $quantity = $req->input('quantity');
-        $price = $req->input('price');
+        $variations = $req->input('variations'); // is array
+        $variationsFromUpdate = [];
+        $variationsFromInsert = [];
 
         $this->productValidator->validateUUID($sale_uuid);
         $this->productValidator->validateUUID($product_uuid);
-        $this->productValidator->validateUUID($variation_uuid);
-        $this->productValidator->validateQuantity($quantity);
-        $this->productValidator->validatePrice($price);
 
+        foreach ($variations as $key => $value) 
+        {   
+            $price = $value['price'];
+            $quantity = $value['quantity'];
+
+            $this->productValidator->validateUUID($value['variation_uuid']);
+            $this->productValidator->validateQuantity($value['quantity']);
+            $this->productValidator->validatePrice($value['price']);
+            
+            $price = ProductHelper::price_format($price);
+            $quantity = (int) $quantity;
+
+            $existing = $this->getterProdutosModel->getSaleItemsBySaleUUIDVariationUUID($sale_uuid, $value['variation_uuid'], $price);
+
+            if($existing) {
+                $variationsFromUpdate[] = $value;
+            } else {
+                $variationsFromInsert[] = $value;
+            }
+        }
+            
         if ($this->productValidator->hasErrors()) {
             return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
         }
 
-        if(!$this->getterProdutosModel->getByUUID($product_uuid) ) {
-            return Response::error(HttpCode::CONFLICT, "Não foi possivel identicar esse produto, verificar o uuid do produto");
-        }
+        $insertResult = $this->setterProdutosModel->addProductsInSale($sale_uuid, $product_uuid, $variationsFromInsert);
+        
 
-        if(!$this->getterProdutosModel->getSaleByUUID($sale_uuid)) {
-            return Response::error(HttpCode::CONFLICT, "Não foi possivel identicar essa venda, verificar o uuid da venda");
-        }
-
-        $price = ProductHelper::price_format($price);
-        $quantity = (int) $quantity; 
-
-        $result = $this->setterProdutosModel->addProductInSale($sale_uuid, $product_uuid, $variation_uuid, $quantity, $price);
-
-        if(!$result) {
-            return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para adicionar o produto na venda");
-        }
-
-        return Response::success(HttpCode::CREATED, "Produto adicionado a venda", $result);
-
+        return [];
+            
     }
 
     public function updateProductInSale(object $req) {
@@ -174,20 +178,22 @@ class SetterProdutosController
         $price = $req->input('price');
 
         $this->productValidator->validateUUID($uuid);
+        $this->productValidator->validateQuantity($quantity);
+        $this->productValidator->validatePrice($price);
 
         if ($this->productValidator->hasErrors()) {
             return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
         }
-
-        $price = ProductHelper::price_format($price);
-        $quantity = (int) $quantity; 
         
         $result = $this->setterProdutosModel->updateProductInSale($uuid, $quantity, $price);
 
         if(!$result) {
-        
+            return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para atualizar o produto na venda");
         }
+
+        return Response::success(HttpCode::OK, "Produto atualizado na venda", $result);
     }
+
 
     public function stockProductEntry() {}
 

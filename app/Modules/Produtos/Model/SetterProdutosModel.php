@@ -87,26 +87,26 @@ class SetterProdutosModel extends Model
     // metodo auxiliar de criação do produto.
     private function createProductVariations($pdo, string $product_uuid, array $variations): bool
     {
-            $sql = "INSERT INTO product_variations
-                    (uuid, product_uuid, size_uuid, color_uuid, barcode, price, created_at)
-                    VALUES (:uuid, :product_uuid, :size_uuid, :color_uuid, :barcode, :price, NOW())";
+        $sql = "INSERT INTO product_variations
+                (uuid, product_uuid, size_uuid, color_uuid, barcode, price, created_at)
+                VALUES (:uuid, :product_uuid, :size_uuid, :color_uuid, :barcode, :price, NOW())";
 
-            $stmt = $pdo->prepare($sql);
+        $stmt = $pdo->prepare($sql);
 
-            foreach ($variations as $variation) {
+        foreach ($variations as $variation) {
 
-                $uuid = UUID::v4();
-                $barcode = BarcodeGenerator::generateEAN13WithPrefix();
+            $uuid = UUID::v4();
+            $barcode = BarcodeGenerator::generateEAN13WithPrefix();
 
-                $stmt->execute([
-                    ':uuid' => $uuid,
-                    ':product_uuid' => $product_uuid,
-                    ':size_uuid' => $variation['size_uuid'],
-                    ':color_uuid' => $variation['color_uuid'],
-                    ':barcode' => $barcode,
-                    ':price' => $variation['price'] ?? 0
-                ]);
-            }
+            $stmt->execute([
+                ':uuid' => $uuid,
+                ':product_uuid' => $product_uuid,
+                ':size_uuid' => $variation['size_uuid'],
+                ':color_uuid' => $variation['color_uuid'],
+                ':barcode' => $barcode,
+                ':price' => $variation['price'] ?? 0
+            ]);
+        }
 
         return true;
     }
@@ -140,30 +140,76 @@ class SetterProdutosModel extends Model
     
     }
 
-    public function addProductInSale(string $sale_uuid, string $product_uuid, string $variation_uuid, int $quantity, float $price) : array
+    public function addProductsInSale(string $sale_uuid, string $product_uuid, array $variations) : array
     {
-        $uuid = UUID::v4();
+      
+        $pdo = parent::PrimayDB();
+        $pdo->beginTransaction();
 
         $sql = "INSERT INTO sale_items (uuid, sale_uuid, product_uuid, variation_uuid, quantity, price, created_at)
             VALUES (:uuid, :sale_uuid, :product_uuid, :variation_uuid, :quantity, :price, NOW())";
 
         try {
 
-            $stmt = parent::PrimayDB()->prepare($sql);
+            $stmt = $pdo->prepare($sql);
 
-            $stmt->bindValue(':uuid', $uuid);
-            $stmt->bindValue(':sale_uuid', $sale_uuid);
-            $stmt->bindValue(':product_uuid', $product_uuid);
-            $stmt->bindValue(':variation_uuid', $variation_uuid);
-            $stmt->bindValue(':quantity', $quantity);
-            $stmt->bindValue(':price', $price);
+            foreach ($variations as $key => $value) 
+            {   
+                $uuid = UUID::v4();
+                $sale_uuid = $sale_uuid;
+                $product_uuid = $product_uuid;
+                $variation_uuid = $value['variation_uuid'];
+                $quantity = $value['quantity'];
+                $price = $value['price'];
 
-            $stmt->execute();
+                $stmt->bindValue(':uuid', $uuid);
+                $stmt->bindValue(':sale_uuid', $sale_uuid);
+                $stmt->bindValue(':product_uuid', $product_uuid);
+                $stmt->bindValue(':variation_uuid', $variation_uuid);
+                $stmt->bindValue(':quantity', $quantity);
+                $stmt->bindValue(':price', $price);
 
-            return ['uuid' => $uuid, 'sale_uuid' => $sale_uuid, 'product_uuid' => $product_uuid, 'quantity' => $quantity, 'price' => $price];   
+                $stmt->execute();
+            }
+
+            $pdo->commit();
+
+            return $this->getterProdutosModel->getSaleItemsBySaleUUID($sale_uuid);
+
         } catch (\Exception $e) {
             error_log($e->getMessage());
+            $pdo->rollBack();
             return [];
+        }
+    }
+
+    public function updateProductsInSale(string $sale_uuid, array $variations)
+    {
+        $pdo = parent::PrimayDB();
+        $pdo->beginTransaction();
+
+        $sql = "UPDATE sale_items SET quantity = :quantity, price = :price WHERE sale_uuid = :sale_uuid AND uuid = :uuid";
+
+        try {
+            $stmt = $pdo->prepare($sql);
+
+            foreach ($variations as $key => $value) {
+
+                $stmt->bindValue(':quantity', $value['quantity']);
+                $stmt->bindValue(':price', $value['price']);
+                $stmt->bindValue(':sale_uuid', $sale_uuid);
+                $stmt->bindValue(':uuid', $value['uuid']);
+                
+                $stmt->execute();
+            }
+
+            $pdo->commit();
+
+            return $this->getterProdutosModel->getSaleItemsBySaleUUID($sale_uuid);
+
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            return []; 
         }
     }
 
