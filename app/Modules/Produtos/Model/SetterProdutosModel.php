@@ -115,6 +115,38 @@ class SetterProdutosModel extends Model
 
         return $this->getterProdutosModel->getProductVariationsByUUID($product_uuid);
     }
+
+    public function updatePriceProductVariation(string $product_uuid, array $variations)
+    {
+        $pdo = parent::PrimayDB();
+        $pdo->beginTransaction();
+
+        $sql = "UPDATE product_variations SET price = :price WHERE product_uuid = :product_uuid AND uuid = :uuid";
+
+        try {
+            $stmt = $pdo->prepare($sql);
+
+            foreach ($variations as $key => $value) 
+            {
+                $uuid = $value['uuid'];
+                $price = $value['price'];
+
+                $stmt->bindValue(':price', $price);
+                $stmt->bindValue(':product_uuid', $product_uuid);
+                $stmt->bindValue(':uuid', $uuid);
+
+                $stmt->execute();
+
+            }
+
+            return $this->getterProdutosModel->getProductVariationsByUUID($product_uuid);
+
+        } catch (\PDOException $e) {
+            error_log($e->getMessage());
+            return [];
+        
+        }
+    }
     
     // ==================================================================
     //                          SALE 

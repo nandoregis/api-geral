@@ -145,6 +145,35 @@ class SetterProdutosController
         
     }
 
+    public function updatePriceProductVariation(object $req) {
+
+        $product_uuid = $req->input('product_uuid');
+        $variations = $req->input('variations'); // is array
+
+        $this->productValidator->validateUUID($product_uuid);
+
+        foreach ($variations as $key => $value) 
+        {   
+            $this->productValidator->validateUUID($value['variation_uuid']);
+            $this->productValidator->validatePrice($value['price']);
+        
+            $value['price'] = ProductHelper::price_format($value['price']);
+            
+        }
+
+        if ($this->productValidator->hasErrors()) 
+        {   
+            return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
+        }
+
+        $result = $this->setterProdutosModel->updatePriceProductVariation($product_uuid, $variations);
+
+        if($result) {
+            return Response::success(HttpCode::CREATED, "Preço do produto alterado com sucesso" , $result);
+        }
+        
+    }
+
     //=========================================================================
     //
     //                                 SALES          
