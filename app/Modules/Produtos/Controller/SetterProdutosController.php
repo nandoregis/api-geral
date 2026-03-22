@@ -110,8 +110,8 @@ class SetterProdutosController
     public function newSale(object $req) : array
     {
        
-        $uuid_user = $req->input('uuid_user');
-        $this->productValidator->validateUUID($uuid_user);
+        $user_uuid = $req->input('user_uuid');
+        $this->productValidator->validateUUID($user_uuid);
 
         if ($this->productValidator->hasErrors()) {
             return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
@@ -119,13 +119,13 @@ class SetterProdutosController
 
         // validar se usuario existe. ( mas basicamente é o mesmo usuario que está fazendo a venda PDV)
 
-        $result = $this->setterProdutosModel->newSale($uuid_user);
+        $result = $this->setterProdutosModel->newSale($user_uuid);
 
         if(!$result) {
             return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para criar nova venda");
         } 
 
-        return [];
+        return Response::success(HttpCode::CREATED, "Nova venda criada!", $result);
     }
 
     public function saleProducts() {}

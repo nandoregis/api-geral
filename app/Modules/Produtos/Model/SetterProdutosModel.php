@@ -115,23 +115,23 @@ class SetterProdutosModel extends Model
     //                          SALE 
     //===================================================================
 
-    public function newSale(string $uuid_user) : array
+    public function newSale(string $user_uuid) : array
     {
         $uuid = UUID::v4();
 
-        $sql = "INSERT INTO sales (uuid, uuid_user, total, created_at)
-            VALUES (:uuid, :uuid_user, :total, NOW())";
+        $sql = "INSERT INTO sales (uuid, user_uuid, total, created_at)
+            VALUES (:uuid, :user_uuid, :total, NOW())";
 
         try {
             $stmt = parent::PrimayDB()->prepare($sql);
             
             $stmt->bindValue(':uuid', $uuid);
-            $stmt->bindValue(':uuid_user', $uuid_user);
-            $stmt->bindValue(':total', 0);
+            $stmt->bindValue(':user_uuid', $user_uuid);
+            $stmt->bindValue(':total', 0.0);
 
             $stmt->execute();
 
-            return ['uuid' => $uuid, 'uuid_user' => $uuid_user, 'total' => "0,00"];
+            return ['uuid' => $uuid, 'user_uuid' => $user_uuid, 'total' => 0];
 
         } catch (\Exception $e) {
             error_log($e->getMessage());
