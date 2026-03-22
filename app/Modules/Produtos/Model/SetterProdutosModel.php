@@ -41,7 +41,7 @@ class SetterProdutosModel extends Model
 
             $stmt->execute();
 
-            $this->createProductVariations($pdo, $uuid, $variations);
+            $this->createProductVariations( $uuid, $variations, $pdo);
 
             $pdo->commit();
 
@@ -83,10 +83,15 @@ class SetterProdutosModel extends Model
     }
 
     public function delete(string $uuid) {}
+    
+    //=========================================================================
+    //                          product_variations          
+    //=========================================================================
 
-    // metodo auxiliar de criação do produto.
-    private function createProductVariations($pdo, string $product_uuid, array $variations): bool
-    {
+    public function createProductVariations(string $product_uuid, array $variations, $pdo = null ): array
+    {   
+        if(!$pdo) $pdo = parent::PrimayDB();
+        
         $sql = "INSERT INTO product_variations
                 (uuid, product_uuid, size_uuid, color_uuid, barcode, price, created_at)
                 VALUES (:uuid, :product_uuid, :size_uuid, :color_uuid, :barcode, :price, NOW())";
@@ -108,7 +113,7 @@ class SetterProdutosModel extends Model
             ]);
         }
 
-        return true;
+        return $this->getterProdutosModel->getProductVariationsByUUID($product_uuid);
     }
     
     // ==================================================================

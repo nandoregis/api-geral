@@ -76,6 +76,20 @@ class ProdutosController extends Controller
 
     //=========================================================================
     //
+    //                          product_variations          
+    //
+    //=========================================================================
+    
+    public function createProductVariations(object $req) {
+        $response = $this->setterProdutosController->createProductVariations($req);
+        return parent::apiView( 
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
+
+    //=========================================================================
+    //
     //                                 SALES          
     //
     //=========================================================================

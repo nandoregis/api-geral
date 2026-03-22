@@ -88,6 +88,12 @@ class GetterProdutosModel extends Model
 
         return $this->fetchAll($sql, [$uuid]);
     }
+
+    public function getProductVariationByUUIDSizeandUUDColor(string $product_uuid, string $size_uuid, string $color_uuid) : array
+    {
+        $sql = "SELECT * FROM product_variations WHERE product_uuid = ? AND size_uuid = ? AND color_uuid = ?";
+        return $this->fetchOne($sql, [$product_uuid, $size_uuid, $color_uuid]);
+    }
     
     //=======================================================
     //                                                      |

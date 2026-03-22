@@ -80,7 +80,7 @@ class SetterProdutosController
         $this->productValidator->validateName($name);
         $this->productValidator->validateReference($reference);
 
-         if ($this->productValidator->hasErrors()) 
+        if ($this->productValidator->hasErrors()) 
         {   
             return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
         }
@@ -99,6 +99,51 @@ class SetterProdutosController
     }
 
     public function delete(string $uuid) {}
+
+    //=========================================================================
+    //                          product_variations          
+    //=========================================================================
+
+    public function createProductVariations(object $req) {
+        
+        $product_uuid = $req->input('product_uuid');
+        $variations = $req->input('variations'); // is array
+        
+        $this->productValidator->validateUUID($product_uuid);
+
+        foreach ($variations as $key => $value) 
+        {       
+            $size_uuid = $value['size_uuid'];
+            $color_uuid = $value['color_uuid'];
+            
+            $this->productValidator->validateUUID($value['size_uuid']);
+            $this->productValidator->validateUUID($value['color_uuid']);
+            $this->productValidator->validatePrice($value['price']);
+
+            $value['price'] = ProductHelper::price_format($value['price']);
+
+            if($this->getterProdutosModel->getProductVariationByUUIDSizeandUUDColor($product_uuid,$size_uuid, $color_uuid)) {
+                return Response::error(HttpCode::CONFLICT, [
+                    'error'=> "Já existe uma variação com esse tamanho e cor.",
+                    'field'=> $value,
+                ]);
+            }
+        }
+
+        if ($this->productValidator->hasErrors()) 
+        {   
+            return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
+        }
+
+        $result = $this->setterProdutosModel->createProductVariations($product_uuid, $variations);
+
+        if(!$result) {
+            return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para criar as variações do produto");
+        }
+
+        return Response::success(HttpCode::CREATED, "Produto atualizado com sucesso" , $result);
+        
+    }
 
     //=========================================================================
     //
@@ -272,6 +317,5 @@ class SetterProdutosController
         return Response::success(HttpCode::CREATED, "Cor criada com sucesso", $result);
     }
 
-    public function createProductVariations() {}
 
 }

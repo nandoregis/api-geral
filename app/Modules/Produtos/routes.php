@@ -53,6 +53,16 @@ return [
                     
                 ],
                 "active" => true
+            ],
+            [   
+                "route" => "/variations/c/create",
+                "controller" => new ProdutosController,
+                "method" => "createProductVariations",
+                "http" => ["POST"],
+                "middlewares" => [
+                    
+                ],
+                "active" => true
             ]
         ]
     ],
