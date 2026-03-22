@@ -24,9 +24,9 @@ class SetterProdutosController
     public function create(object $req)
     {   
      
-        $reference = $req->input('reference');
-        $name = $req->input('name');
-        $variations = $req->input('variations');
+        $reference = $req->input('reference','');
+        $name = $req->input('name','');
+        $variations = $req->input('variations',[]);
         
         $this->productValidator->validateReference($reference);
         $this->productValidator->validateName($name);
@@ -40,9 +40,9 @@ class SetterProdutosController
         // verificões de UUID das tabelas sizes e colors
         for ($i=0; $i < count($variations); $i++) 
         { 
-            $size_uuid = $variations[$i]['size_uuid'];
-            $color_uuid = $variations[$i]['color_uuid'];
-            $price = $variations[$i]['price'];
+            $size_uuid = isset($variations[$i]['size_uuid']) ? $variations[$i]['size_uuid'] : "";
+            $color_uuid = isset($variations[$i]['color_uuid']) ? $variations[$i]['color_uuid'] : "";
+            $price = isset($variations[$i]['price']) ? $variations[$i]['price'] : "";
 
             if(!$this->getterProdutosModel->getSizeByUUID($size_uuid)) {
                 return Response::error(HttpCode::CONFLICT, "Não foi possivel identicar esse tamanho, verificar o uuid do tamanho");
@@ -78,9 +78,9 @@ class SetterProdutosController
     public function update(object $req)
     { 
         
-        $uuid = $req->input('uuid');
-        $reference = $req->input('reference');
-        $name = $req->input('name');
+        $uuid = $req->input('uuid','');
+        $reference = $req->input('reference','');
+        $name = $req->input('name','');
         
         $this->productValidator->validateUUID($uuid);
         $this->productValidator->validateName($name);
@@ -112,20 +112,21 @@ class SetterProdutosController
 
     public function createProductVariations(object $req) {
         
-        $product_uuid = $req->input('product_uuid');
-        $variations = $req->input('variations'); // is array
+        $product_uuid = $req->input('product_uuid','');
+        $variations = $req->input('variations', []);
+
         $this->productValidator->validateArrayVariations($variations);
-        
         $this->productValidator->validateUUID($product_uuid);
 
         foreach ($variations as $key => $value) 
         {       
-            $size_uuid = $value['size_uuid'];
-            $color_uuid = $value['color_uuid'];
+            $size_uuid = isset($value['size_uuid']) ? $value['size_uuid'] : "";
+            $color_uuid = isset($value['color_uuid']) ? $value['color_uuid'] : "";
+            $price = isset($value['price']) ? $value['price'] : "";
             
-            $this->productValidator->validateUUID($value['size_uuid']);
-            $this->productValidator->validateUUID($value['color_uuid']);
-            $this->productValidator->validatePrice($value['price']);
+            $this->productValidator->validateUUID($size_uuid);
+            $this->productValidator->validateUUID($color_uuid);
+            $this->productValidator->validatePrice($price);
 
             $value['price'] = ProductHelper::price_format($value['price']);
 
@@ -154,8 +155,9 @@ class SetterProdutosController
 
     public function updatePriceProductVariation(object $req) {
 
-        $product_uuid = $req->input('product_uuid');
-        $variations = $req->input('variations'); // is array
+        $product_uuid = $req->input('product_uuid','');
+        $variations = $req->input('variations', []);
+
         $this->productValidator->validateArrayVariations($variations);
 
         $this->productValidator->validateUUID($product_uuid);
