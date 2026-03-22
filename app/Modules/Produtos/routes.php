@@ -161,7 +161,7 @@ return [
             [
                 "route" => "/itens/{sale_uuid}",
                 "controller" => new ProdutosController,
-                "method" => "getSaleItensBySaleUUID",
+                "method" => "getSaleItemsBySaleUUID",
                 "http" => ["GET"],
                 "middlewares" => [],
                 "active" => true
