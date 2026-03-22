@@ -167,6 +167,28 @@ class SetterProdutosController
 
     }
 
+    public function updateProductInSale(object $req) {
+
+        $uuid = $req->input('uuid');
+        $quantity = $req->input('quantity');
+        $price = $req->input('price');
+
+        $this->productValidator->validateUUID($uuid);
+
+        if ($this->productValidator->hasErrors()) {
+            return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
+        }
+
+        $price = ProductHelper::price_format($price);
+        $quantity = (int) $quantity; 
+        
+        $result = $this->setterProdutosModel->updateProductInSale($uuid, $quantity, $price);
+
+        if(!$result) {
+        
+        }
+    }
+
     public function stockProductEntry() {}
 
     public function stockProductExit() {}

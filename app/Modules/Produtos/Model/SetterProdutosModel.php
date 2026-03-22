@@ -167,6 +167,27 @@ class SetterProdutosModel extends Model
         }
     }
 
+    public function updateProductInSale(string $uuid, int $quantity, float $price) : array
+    {
+        $sql = "UPDATE sale_items SET quantity = :quantity, price = :price WHERE uuid = :uuid";
+
+        try {
+            $stmt = parent::PrimayDB()->prepare($sql);
+
+            $stmt->bindValue(':quantity', $quantity);
+            $stmt->bindValue(':price', $price);
+            $stmt->bindValue(':uuid', $uuid);
+
+            $stmt->execute();
+
+            return ['uuid' => $uuid, 'quantity' => $quantity, 'price' => $price];
+
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            return []; 
+        }
+    }
+
     // ===============================================================================
     //    Movimentação de estoque, entrada e saida, tabela stock e stock_movements
     // ===============================================================================
