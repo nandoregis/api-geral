@@ -57,7 +57,7 @@ class ProductValidator
         return $this->baseValidate(
             fn() => $this->helpBaseValidate('color_hex', fn() => Validation::noExist($color_hex), 'Não está com o parametro color_hex, faça a correção.'),
             fn() => $this->helpBaseValidate('color_hex', fn() => Validation::isEmpty($color_hex), 'color_hex não pode ser vazio.'),
-            fn() => $this->helpBaseValidate('color_hex', fn() => !Validation::regex($color_hex, ProductRules::COLOR_HEX), 'color_hex fora do formato esperado, formato correto #FFFFFF.')
+            fn() => $this->helpBaseValidate('color_hex', fn() => !Validation::regex($color_hex, ProductRules::COLOR_HEX), 'color_hex fora do formato esperado, formato esperado #FFFFFF.')
         );
 
     }
@@ -68,10 +68,19 @@ class ProductValidator
         return $this->baseValidate(
             fn() => $this->helpBaseValidate('price', fn() => Validation::noExist($price), 'Não está com o parametro price, faça a correção.'),
             fn() => $this->helpBaseValidate('price', fn() => Validation::isEmpty($price), 'price não pode ser vazio.'),
-            fn() => $this->helpBaseValidate('price', fn() => !Validation::regex($price, ProductRules::PRICE), 'price fora do formato esperado')
+            fn() => $this->helpBaseValidate('price', fn() => !Validation::regex($price, ProductRules::PRICE), 'price fora do formato esperado, formato esperado : 0,00')
         );
 
     }
+
+    public function validateQuantity(string | null $quantity)
+    {
+        return $this->baseValidate(
+            fn() => $this->helpBaseValidate('quantity', fn() => Validation::noExist($quantity), 'Não está com o parametro quantity, faça a correção.'),
+            fn() => $this->helpBaseValidate('quantity', fn() => Validation::isEmpty($quantity), 'quantity não pode ser vazio.'),
+            fn() => $this->helpBaseValidate('price', fn() => !Validation::regex($quantity, ProductRules::INT), 'quantity fora do formato esperado, formato esperado inteiro')
+        );
+    }         
 
     /** ===========================================
      * 

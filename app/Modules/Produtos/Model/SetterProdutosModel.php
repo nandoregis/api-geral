@@ -140,7 +140,32 @@ class SetterProdutosModel extends Model
     
     }
 
-    public function saleProducts() {}
+    public function addProductInSale(string $sale_uuid, string $product_uuid, string $variation_uuid, int $quantity, float $price) : array
+    {
+        $uuid = UUID::v4();
+
+        $sql = "INSERT INTO sale_items (uuid, sale_uuid, product_uuid, variation_uuid, quantity, price, created_at)
+            VALUES (:uuid, :sale_uuid, :product_uuid, :variation_uuid, :quantity, :price, NOW())";
+
+        try {
+
+            $stmt = parent::PrimayDB()->prepare($sql);
+
+            $stmt->bindValue(':uuid', $uuid);
+            $stmt->bindValue(':sale_uuid', $sale_uuid);
+            $stmt->bindValue(':product_uuid', $product_uuid);
+            $stmt->bindValue(':variation_uuid', $variation_uuid);
+            $stmt->bindValue(':quantity', $quantity);
+            $stmt->bindValue(':price', $price);
+
+            $stmt->execute();
+
+            return ['uuid' => $uuid, 'sale_uuid' => $sale_uuid, 'product_uuid' => $product_uuid, 'quantity' => $quantity, 'price' => $price];   
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            return [];
+        }
+    }
 
     // ===============================================================================
     //    Movimentação de estoque, entrada e saida, tabela stock e stock_movements

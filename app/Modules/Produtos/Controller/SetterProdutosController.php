@@ -128,12 +128,48 @@ class SetterProdutosController
         return Response::success(HttpCode::CREATED, "Nova venda criada!", $result);
     }
 
-    public function saleProducts() {}
+    public function addProductInSale(object $req) {
+
+        $sale_uuid = $req->input('sale_uuid');
+        $product_uuid = $req->input('product_uuid');
+        $variation_uuid = $req->input('variation_uuid');
+        $quantity = $req->input('quantity');
+        $price = $req->input('price');
+
+        $this->productValidator->validateUUID($sale_uuid);
+        $this->productValidator->validateUUID($product_uuid);
+        $this->productValidator->validateUUID($variation_uuid);
+        $this->productValidator->validateQuantity($quantity);
+        $this->productValidator->validatePrice($price);
+
+        if ($this->productValidator->hasErrors()) {
+            return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
+        }
+
+        if(!$this->getterProdutosModel->getByUUID($product_uuid) ) {
+            return Response::error(HttpCode::CONFLICT, "Não foi possivel identicar esse produto, verificar o uuid do produto");
+        }
+
+        if(!$this->getterProdutosModel->getSaleByUUID($sale_uuid)) {
+            return Response::error(HttpCode::CONFLICT, "Não foi possivel identicar essa venda, verificar o uuid da venda");
+        }
+
+        $price = ProductHelper::price_format($price);
+        $quantity = (int) $quantity; 
+
+        $result = $this->setterProdutosModel->addProductInSale($sale_uuid, $product_uuid, $variation_uuid, $quantity, $price);
+
+        if(!$result) {
+            return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para adicionar o produto na venda");
+        }
+
+        return Response::success(HttpCode::CREATED, "Produto adicionado a venda", $result);
+
+    }
 
     public function stockProductEntry() {}
 
     public function stockProductExit() {}
-
     
     //=========================================================================
     //

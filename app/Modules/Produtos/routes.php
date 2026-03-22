@@ -173,6 +173,14 @@ return [
                 "http" => ["POST"],
                 "middlewares" => [],
                 "active" => true
+            ],
+            [
+                "route" => "/itens/c/create",
+                "controller" => new ProdutosController,
+                "method" => "addProductInSale",
+                "http" => ["POST"],
+                "middlewares" => [],
+                "active" => true
             ]
         ]
     ]

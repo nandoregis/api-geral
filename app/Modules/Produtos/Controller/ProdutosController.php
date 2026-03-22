@@ -119,7 +119,16 @@ class ProdutosController extends Controller
     // metodo POST
     public function newSale(object $req) 
     {
-         $response = $this->setterProdutosController->newSale($req);
+        $response = $this->setterProdutosController->newSale($req);
+        return parent::apiView( 
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED),
+            $response
+        );
+    }
+
+    public function addProductInSale(object $req)
+    {
+        $response = $this->setterProdutosController->addProductInSale($req);
         return parent::apiView( 
             Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED),
             $response
