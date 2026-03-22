@@ -3,7 +3,7 @@
 namespace app\Modules\Produtos\Helper;
 
 
-class ProdutosHelper
+class ProductHelper
 {
     
 

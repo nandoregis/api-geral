@@ -73,6 +73,12 @@ class SetterProdutosModel extends Model
 
     public function delete(string $uuid) {}
 
+    // metodo auxiliar de criação do produto.
+    private function createProductVariations(string $product_uuid, string $size_uuid, string $color_uuid, string $price) 
+    {
+        $uuid = UUID::v4();
+    }
+
     public function saleProducts() {}
 
     // ===============================================================================
@@ -135,9 +141,6 @@ class SetterProdutosModel extends Model
             return [];
         }
     }
-
-    public function createProductVariations() {}
-    
 
 
 }
