@@ -130,5 +130,50 @@ return [
                 "active" => true
             ]
         ]
+    ],
+    [
+        'static' => 'v1/sales',
+        'routes' => [
+            [
+                "route" => "/",
+                "controller" => new ProdutosController,
+                "method" => "getAllSales",
+                "http" => ["GET"],
+                "middlewares" => [],
+                "active" => true
+            ],
+            [
+                "route" => "/{uuid}",
+                "controller" => new ProdutosController,
+                "method" => "getSaleByUUID",
+                "http" => ["GET"],
+                "middlewares" => [],
+                "active" => true
+            ],
+            [
+                "route" => "/users/{uuid_user}",
+                "controller" => new ProdutosController,
+                "method" => "getSaleByUUIDUser",
+                "http" => ["GET"],
+                "middlewares" => [],
+                "active" => true
+            ],
+            [
+                "route" => "/itens/{sale_uuid}",
+                "controller" => new ProdutosController,
+                "method" => "getSaleItensBySaleUUID",
+                "http" => ["GET"],
+                "middlewares" => [],
+                "active" => true
+            ],
+            [
+                "route" => "/c/create",
+                "controller" => new ProdutosController,
+                "method" => "newSale",
+                "http" => ["POST"],
+                "middlewares" => [],
+                "active" => true
+            ]
+        ]
     ]
 ];

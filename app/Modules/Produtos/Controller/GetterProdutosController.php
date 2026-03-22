@@ -74,5 +74,31 @@ class GetterProdutosController
     {
         return $this->getterProdutosModel->checkNameColorWithDifferentUUID($uuid, $name);
     }
+
+    //=======================================================
+    //                                                      |
+    //                    Tabelas : sales                   |
+    //                                                      |
+    //=======================================================
+
+    public function getAllSales() : array
+    {
+        return Response::success(200, "Todas as vendas", $this->getterProdutosModel->getAllSales());
+    }
+
+    public function getSaleByUUID(object $req) : array
+    {
+        return Response::success(200, "Venda pego pelo UUID", $this->getterProdutosModel->getSaleByUUID($req->input('uuid') ));
+    }
+
+    public function getSaleByUUIDUser(object $req) : array
+    {
+        return Response::success(200, "Venda pego pelo UUID do usuario", $this->getterProdutosModel->getSaleByUUIDUser($req->input('uuid_user') ));
+    }
+
+    public function getSaleItensBySaleUUID(object $req)  : array
+    {
+        return Response::success(200, "Itens da venda pego pelo UUID da venda", $this->getterProdutosModel->getSaleItensBySaleUUID($req->input('sale_uuid') )); 
+    }
     
 }

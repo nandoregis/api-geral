@@ -80,11 +80,48 @@ class ProdutosController extends Controller
     //
     //=========================================================================
 
+    public function getAllSales() 
+    {
+        $response = $this->getterProdutosController->getAllSales();
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
+
+    public function getSaleByUUID(object $req) 
+    {
+        $response = $this->getterProdutosController->getSaleByUUID($req);
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
+
+    public function getSaleByUUIDUser(object $req) 
+    {
+        $response = $this->getterProdutosController->getSaleByUUIDUser($req);
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
+
+    public function getSaleItensBySaleUUID(object $req) 
+    {
+        $response = $this->getterProdutosController->getSaleItensBySaleUUID($req);
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
+
+    // metodo POST
     public function newSale(object $req) 
     {
          $response = $this->setterProdutosController->newSale($req);
         return parent::apiView( 
-            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED),
             $response
         );
     }
