@@ -6,6 +6,7 @@ use app\Core\HttpCode;
 use app\Core\UUID;
 use app\Factory\Response;
 use app\Model\Model;
+use app\Service\BarcodeGenerator;
 
 class SetterProdutosModel extends Model
 {   
@@ -19,16 +20,20 @@ class SetterProdutosModel extends Model
     /**
      *  Create : produtos
      */
-    public function create(string $reference, string $name): array
+    public function create(string $reference, string $name, array $variations): array
     {         
         
+        $pdo = parent::PrimayDB();
+        $pdo->beginTransaction();
+
         $uuid = UUID::v4();
 
         $sql = "INSERT INTO products (uuid, reference, `name`, created_at)
             VALUES (:uuid, :reference, :name, NOW())";
 
         try {
-            $stmt = parent::PrimayDB()->prepare($sql);
+
+            $stmt = $pdo->prepare($sql);
 
             $stmt->bindValue(':uuid', $uuid);
             $stmt->bindValue(':reference', $reference);
@@ -36,11 +41,16 @@ class SetterProdutosModel extends Model
 
             $stmt->execute();
 
+            $this->createProductVariations($pdo, $uuid, $variations);
+
+            $pdo->commit();
+
             return $this->getterProdutosModel->getByUUID($uuid);
 
         } catch (\PDOException $e) 
         {
             error_log($e->getMessage());
+            $pdo->rollBack();
             return [];
         }
     }
@@ -49,14 +59,11 @@ class SetterProdutosModel extends Model
     public function update(string $uuid, string $reference, string $name) : array
     {
         
-        $pdo = parent::PrimayDB();
-        $pdo->beginTransaction();
-
         $sql = "UPDATE products SET reference = :reference, `name` = :name WHERE uuid = :uuid";
         
         try {
 
-            $stmt = $pdo->prepare($sql);
+            $stmt = parent::PrimayDB()->prepare($sql);
             
             $stmt->bindValue(':reference', $reference);
             $stmt->bindValue(':name', $name);
@@ -78,13 +85,30 @@ class SetterProdutosModel extends Model
     public function delete(string $uuid) {}
 
     // metodo auxiliar de criação do produto.
-    private function createProductVariations(string $product_uuid, array $variations) : array
+    private function createProductVariations($pdo, string $product_uuid, array $variations): bool
     {
-        $uuid = UUID::v4();
-        $sql = "INSERT INTO product_variations (uuid, product_uuid, size_uuid, color_uuid, barcode, price, created_at)
-            VALUES (:uuid, :product_uuid, :size_uuid, :color_uuid, :barcode, :price, NOW())";
-        
-        return [];  
+            $sql = "INSERT INTO product_variations
+                    (uuid, product_uuid, size_uuid, color_uuid, barcode, price, created_at)
+                    VALUES (:uuid, :product_uuid, :size_uuid, :color_uuid, :barcode, :price, NOW())";
+
+            $stmt = $pdo->prepare($sql);
+
+            foreach ($variations as $variation) {
+
+                $uuid = UUID::v4();
+                $barcode = BarcodeGenerator::generateEAN13WithPrefix();
+
+                $stmt->execute([
+                    ':uuid' => $uuid,
+                    ':product_uuid' => $product_uuid,
+                    ':size_uuid' => $variation['size_uuid'],
+                    ':color_uuid' => $variation['color_uuid'],
+                    ':barcode' => $barcode,
+                    ':price' => $variation['price'] ?? 0
+                ]);
+            }
+
+        return true;
     }
 
     public function saleProducts() {}

@@ -62,7 +62,7 @@ class SetterProdutosController
         }
 
 
-        $result = $this->setterProdutosModel->create($reference, $name);
+        $result = $this->setterProdutosModel->create($reference, $name, $variations);
 
         if(!$result) return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para criar o produto");
         
