@@ -37,14 +37,22 @@ class GetterProdutosModel extends Model
 
     public function getByUUID(string $uuid) : array
     {   
-        $sql = "SELECT * FROM products WHERE uuid = ?";
-        return $this->fetchOne($sql, [$uuid]);
+        $sql = "SELECT uuid, reference, `name` FROM products WHERE uuid = ?";
+        $product = $this->fetchOne($sql, [$uuid]);
+
+        if($product) $product['variations'] = $this->getProductVariationsByUUID($product['uuid']);
+
+        return $product ?: [];
     }
 
     public function getByReference(string $reference) : array
     {   
-        $sql = "SELECT * FROM products WHERE reference = ?";
-        return $this->fetchOne($sql, [$reference]);
+        $sql = "SELECT uuid, reference, `name` FROM products WHERE reference = ?";
+        $product = $this->fetchOne($sql, [$reference]);
+        
+        if($product) $product['variations'] = $this->getProductVariationsByUUID($product['uuid']);
+
+        return $product ?: [];
     }
     
     #
