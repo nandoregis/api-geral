@@ -2,7 +2,7 @@
 
 ### entrada de estoque
 ### Saída de estoque
-### venda PDV, com saida de estoque altomatica e registro de itens vendidos.
+### venda PDV, com saida de estoque automatica e registro de itens vendidos.
 
 ### update size, colors,
 

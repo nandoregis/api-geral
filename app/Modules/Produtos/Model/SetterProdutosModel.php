@@ -110,6 +110,35 @@ class SetterProdutosModel extends Model
 
         return true;
     }
+    
+    // ==================================================================
+    //                          SALE 
+    //===================================================================
+
+    public function newSale(string $uuid_user) : array
+    {
+        $uuid = UUID::v4();
+
+        $sql = "INSERT INTO sales (uuid, uuid_user, total, created_at)
+            VALUES (:uuid, :uuid_user, :total, NOW())";
+
+        try {
+            $stmt = parent::PrimayDB()->prepare($sql);
+            
+            $stmt->bindValue(':uuid', $uuid);
+            $stmt->bindValue(':uuid_user', $uuid_user);
+            $stmt->bindValue(':total', 0);
+
+            $stmt->execute();
+
+            return ['uuid' => $uuid, 'uuid_user' => $uuid_user, 'total' => "0,00"];
+
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            return [];
+        }
+    
+    }
 
     public function saleProducts() {}
 

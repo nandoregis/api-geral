@@ -80,6 +80,15 @@ class ProdutosController extends Controller
     //
     //=========================================================================
 
+    public function newSale(object $req) 
+    {
+         $response = $this->setterProdutosController->newSale($req);
+        return parent::apiView( 
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
+
     public function saleProducts() {}
 
     public function stockProductEntry() {}
