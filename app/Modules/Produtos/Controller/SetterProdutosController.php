@@ -159,7 +159,7 @@ class SetterProdutosController
                 $variationsFromInsert[] = $value;
             }
         }
-            
+        
         if ($this->productValidator->hasErrors()) {
             return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
         }
@@ -180,8 +180,9 @@ class SetterProdutosController
             return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para atualizar item na venda");
         }
 
+        $saleProducts = $this->getterProdutosModel->getSaleItemsBySaleUUID($sale_uuid);
 
-        return Response::success(HttpCode::CREATED, "Itens adicionados na venda", array_merge($insertResult, $updateResult));
+        return Response::success(HttpCode::CREATED, "Itens da venda", $saleProducts);
             
     }
 
