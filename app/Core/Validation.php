@@ -25,10 +25,24 @@ class Validation
         return !isset($value);
     }
 
-
     public static function regex( ? string $value, string $pattern): bool
     {
         return preg_match($pattern, $value) === 1;
+    }
+
+    public static function isArray( mixed $value)
+    {
+        return is_array($value);
+    }
+
+    public static function isString( mixed $value)
+    {
+        return is_string($value);
+    }
+
+    public static function isNumber( mixed $value)
+    {
+        return is_numeric($value);
     }
 
     public static function arrayHasKey(array $arr, string $key)

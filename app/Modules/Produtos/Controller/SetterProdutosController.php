@@ -30,6 +30,12 @@ class SetterProdutosController
         
         $this->productValidator->validateReference($reference);
         $this->productValidator->validateName($name);
+        $this->productValidator->validateArrayVariations($variations);
+
+        if ($this->productValidator->hasErrors()) 
+        {   
+            return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
+        }
 
         // verificões de UUID das tabelas sizes e colors
         for ($i=0; $i < count($variations); $i++) 
@@ -108,6 +114,7 @@ class SetterProdutosController
         
         $product_uuid = $req->input('product_uuid');
         $variations = $req->input('variations'); // is array
+        $this->productValidator->validateArrayVariations($variations);
         
         $this->productValidator->validateUUID($product_uuid);
 
@@ -149,6 +156,7 @@ class SetterProdutosController
 
         $product_uuid = $req->input('product_uuid');
         $variations = $req->input('variations'); // is array
+        $this->productValidator->validateArrayVariations($variations);
 
         $this->productValidator->validateUUID($product_uuid);
 
@@ -171,7 +179,7 @@ class SetterProdutosController
         if($result) {
             return Response::success(HttpCode::CREATED, "Preço do produto alterado com sucesso" , $result);
         }
-        
+
     }
 
     //=========================================================================
@@ -214,6 +222,7 @@ class SetterProdutosController
 
         $this->productValidator->validateUUID($sale_uuid);
         $this->productValidator->validateUUID($product_uuid);
+        $this->productValidator->validateArrayVariations($variations);
 
         foreach ($variations as $key => $value) 
         {   
