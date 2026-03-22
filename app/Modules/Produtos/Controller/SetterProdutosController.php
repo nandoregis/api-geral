@@ -135,23 +135,23 @@ class SetterProdutosController
         $variations = $req->input('variations'); // is array
         $variationsFromUpdate = [];
         $variationsFromInsert = [];
+        $insertResult = [];
+        $updateResult = [];
 
         $this->productValidator->validateUUID($sale_uuid);
         $this->productValidator->validateUUID($product_uuid);
 
         foreach ($variations as $key => $value) 
         {   
-            $price = $value['price'];
-            $quantity = $value['quantity'];
-
+        
             $this->productValidator->validateUUID($value['variation_uuid']);
             $this->productValidator->validateQuantity($value['quantity']);
             $this->productValidator->validatePrice($value['price']);
             
-            $price = ProductHelper::price_format($price);
-            $quantity = (int) $quantity;
+            $value['price'] = ProductHelper::price_format($value['price']);
+            $value['quantity'] = (int) $value['quantity'];
 
-            $existing = $this->getterProdutosModel->getSaleItemsBySaleUUIDVariationUUID($sale_uuid, $value['variation_uuid'], $price);
+            $existing = $this->getterProdutosModel->getSaleItemsBySaleUUIDVariationUUID($sale_uuid, $value['variation_uuid'], $value['price']);
 
             if($existing) {
                 $variationsFromUpdate[] = $value;
@@ -164,10 +164,24 @@ class SetterProdutosController
             return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
         }
 
-        $insertResult = $this->setterProdutosModel->addProductsInSale($sale_uuid, $product_uuid, $variationsFromInsert);
-        
+        if( $variationsFromInsert ){
+            $insertResult = $this->setterProdutosModel->addProductsInSale($sale_uuid, $product_uuid, $variationsFromInsert);
+        }
 
-        return [];
+        if( $variationsFromUpdate ) {
+            $updateResult = $this->setterProdutosModel->updateProductsInSale($sale_uuid, $variationsFromUpdate);
+        }
+
+        if(!$insertResult && $variationsFromInsert) {
+            return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para adicionar item na venda");
+        }
+
+        if( !$updateResult && $variationsFromUpdate ) {
+            return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para atualizar item na venda");
+        }
+
+
+        return Response::success(HttpCode::CREATED, "Itens adicionados na venda", array_merge($insertResult, $updateResult));
             
     }
 

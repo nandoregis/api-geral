@@ -174,7 +174,7 @@ class SetterProdutosModel extends Model
 
             $pdo->commit();
 
-            return $this->getterProdutosModel->getSaleItemsBySaleUUID($sale_uuid);
+            return $variations;
 
         } catch (\Exception $e) {
             error_log($e->getMessage());
@@ -188,7 +188,7 @@ class SetterProdutosModel extends Model
         $pdo = parent::PrimayDB();
         $pdo->beginTransaction();
 
-        $sql = "UPDATE sale_items SET quantity = :quantity, price = :price WHERE sale_uuid = :sale_uuid AND uuid = :uuid";
+        $sql = "UPDATE sale_items SET quantity = :quantity, price = :price WHERE sale_uuid = :sale_uuid AND variation_uuid = :variation_uuid";
 
         try {
             $stmt = $pdo->prepare($sql);
@@ -198,14 +198,14 @@ class SetterProdutosModel extends Model
                 $stmt->bindValue(':quantity', $value['quantity']);
                 $stmt->bindValue(':price', $value['price']);
                 $stmt->bindValue(':sale_uuid', $sale_uuid);
-                $stmt->bindValue(':uuid', $value['uuid']);
+                $stmt->bindValue(':variation_uuid', $value['variation_uuid']);
                 
                 $stmt->execute();
             }
 
             $pdo->commit();
 
-            return $this->getterProdutosModel->getSaleItemsBySaleUUID($sale_uuid);
+            return $variations;
 
         } catch (\Exception $e) {
             error_log($e->getMessage());
