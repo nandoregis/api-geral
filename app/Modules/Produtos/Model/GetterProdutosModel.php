@@ -16,10 +16,23 @@ class GetterProdutosModel extends Model
 
     public function getAll(int $limit = 50, int $offset = 0): array
     {
-        $sql = "SELECT * FROM products LIMIT ? OFFSET ?";
+        $sql = "SELECT uuid, reference, `name` FROM products LIMIT ? OFFSET ?";
         $stmt = parent::PrimayDB()->prepare($sql);
-        $stmt->execute([$limit, $offset]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        $stmt->bindValue(1, $limit, PDO::PARAM_INT);
+        $stmt->bindValue(2, $offset, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if($products) {
+            foreach ($products as &$product) {
+                $product['variations'] = $this->getProductVariationsByUUID($product['uuid']);
+            }
+        }
+
+        return $products?: [];
     }
 
     public function getByUUID(string $uuid) : array
@@ -41,6 +54,32 @@ class GetterProdutosModel extends Model
         $data = $this->fetchOne($sql, [$reference, $uuid]);
         return $data ? true : false;
     } 
+
+
+    public function getProductVariationsByUUID(string $uuid) : array
+    {
+        $sql = "SELECT 
+            pv.uuid,
+            s.uuid AS size_uuid,
+            c.uuid AS color_uuid,
+            pv.barcode,
+            pv.price,
+            s.name AS size_name,
+            c.name AS color_name,
+            c.color_hex
+
+        FROM product_variations pv
+
+        LEFT JOIN sizes s 
+            ON s.uuid = pv.size_uuid
+
+        LEFT JOIN colors c 
+            ON c.uuid = pv.color_uuid
+
+        WHERE pv.product_uuid = ?";
+
+        return $this->fetchAll($sql, [$uuid]);
+    }
     
     //=======================================================
     //                                                      |
