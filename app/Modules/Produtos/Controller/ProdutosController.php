@@ -98,9 +98,9 @@ class ProdutosController extends Controller
         );
     }
 
-    public function getSaleByUUIDUser(object $req) 
+    public function getSalesByUUIDUser(object $req) 
     {
-        $response = $this->getterProdutosController->getSaleByUUIDUser($req);
+        $response = $this->getterProdutosController->getSalesByUUIDUser($req);
         return parent::apiView(
             Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
             $response

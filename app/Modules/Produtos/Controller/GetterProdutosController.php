@@ -91,9 +91,9 @@ class GetterProdutosController
         return Response::success(200, "Venda pego pelo UUID", $this->getterProdutosModel->getSaleByUUID($req->input('uuid') ));
     }
 
-    public function getSaleByUUIDUser(object $req) : array
+    public function getSalesByUUIDUser(object $req) : array
     {
-        return Response::success(200, "Venda pego pelo UUID do usuario", $this->getterProdutosModel->getSaleByUUIDUser($req->input('uuid_user') ));
+        return Response::success(200, "Venda pego pelo UUID do usuario", $this->getterProdutosModel->getSalesByUUIDUser($req->input('uuid_user') ));
     }
 
     public function getSaleItemsBySaleUUID(object $req)  : array

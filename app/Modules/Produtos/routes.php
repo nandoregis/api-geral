@@ -159,9 +159,9 @@ return [
                 "active" => true
             ],
             [
-                "route" => "/itens/{sale_uuid}",
+                "route" => "/items/{sale_uuid}",
                 "controller" => new ProdutosController,
-                "method" => "getSaleItemsBySaleUUID",
+                "method" => "getSalesItemsBySaleUUID",
                 "http" => ["GET"],
                 "middlewares" => [],
                 "active" => true

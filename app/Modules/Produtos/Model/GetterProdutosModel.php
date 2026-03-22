@@ -123,7 +123,7 @@ class GetterProdutosModel extends Model
         return $this->fetchOne($sql, [$uuid]);
     }
 
-    public function getSaleByUUIDUser(string $uuid_user) : array
+    public function getSalesByUUIDUser(string $uuid_user) : array
     {   
         $sql = "SELECT * FROM sales WHERE uuid_user = ?";
         return $this->fetchOne($sql, [$uuid_user]);
