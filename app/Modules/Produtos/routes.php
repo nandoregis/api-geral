@@ -54,8 +54,14 @@ return [
                 ],
                 "active" => true
             ],
+            
+        ]
+    ],
+    [
+        'static' => 'v1/product_variations',
+        'routes' => [
             [   
-                "route" => "/variations/c/create",
+                "route" => "/c/create",
                 "controller" => new ProdutosController,
                 "method" => "createProductVariations",
                 "http" => ["POST"],
