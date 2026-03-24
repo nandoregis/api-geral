@@ -16,3 +16,7 @@ define('EXPIRED_JWT', '+1 minute'); // -> Respeitar regra do Datetime, o modify 
 // CONST NOME DA SESSION E DO COOKIE
 define('COOKIE_NAME','auth-system');
 
+// CONST API KEY
+
+define('API_KEY', $env['API_KEY']);
+
