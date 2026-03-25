@@ -58,6 +58,11 @@ class Request
        Métodos públicos
     ========================== */
 
+    public function get_header(string $key)
+    {
+        return $this->headers[$key] ?? null;
+    }
+
     public function input(string $key, $default = null)
     {
         return $this->body[$key] ?? $default;

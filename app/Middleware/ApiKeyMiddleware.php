@@ -1,7 +1,9 @@
 <?php
+
 namespace app\Middleware;
 
 use app\Core\HttpCode;
+use app\Factory\Response;
 
 /**
  * Middleware para verificar se a requisição possui uma API key válida.
@@ -14,11 +16,12 @@ class ApiKeyMiddleware
     {
         $apiKey = $req->get_header(self::HEADER_NAME);
 
-        if (!$this->isValid($apiKey)) {
+        if (!$this->isValid($apiKey)) 
+        {
             http_response_code(HttpCode::UNAUTHORIZED);
             header('Content-Type: application/json');
             echo json_encode([
-                'status'  => false,
+                'error'  => true,
                 'code'    => HttpCode::UNAUTHORIZED,
                 'message' => 'API key inválida ou ausente.'
             ]);

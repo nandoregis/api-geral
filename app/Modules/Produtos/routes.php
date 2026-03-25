@@ -1,5 +1,6 @@
 <?php
 
+use app\Middleware\ApiKeyMiddleware;
 use app\Modules\Produtos\Controller\ProdutosController;
 
 return [
@@ -11,7 +12,9 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "getAll",
                 "http" => ["GET"],
-                "middlewares" => [],
+                "middlewares" => [
+                    new ApiKeyMiddleware
+                ],
                 "active" => true
             ],
             [   
