@@ -55,7 +55,7 @@ class JWT
     }
 
     
-    private function isTokenExpired(string $token) : bool
+    public function isTokenExpired(string $token) : bool
     {
         $token = $this->decode($token);
         $now = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));

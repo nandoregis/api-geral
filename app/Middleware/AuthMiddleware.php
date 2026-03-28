@@ -27,7 +27,7 @@ class AuthMiddleware {
 
         if(!isset($payload)) $this->unauthorizedResponse('Token inválido');
 
-        if($this->token_expired($token)) $this->unauthorizedResponse('Token expirado');
+        if( ( new JWT )->isTokenExpired($token) ) $this->unauthorizedResponse('Token expirado');
 
         $req->authTokenDecoded = $payload;
         
@@ -48,17 +48,7 @@ class AuthMiddleware {
         $token = trim($partsHeader[1]);
         return $token !== '' ? $token : null;
     }
-
-    private function token_expired(string $token) : bool
-    {
-        $token = (new JWT)->decode($token);
-        $now = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
-        
-        if($now > $token['expired_date']) return true;
     
-        return false;
-    }
-
     private function unauthorizedResponse(string $message)
     {
         $response = new ApiView();
