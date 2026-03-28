@@ -4,6 +4,11 @@ namespace app\Core;
 
 class Validation
 {
+    private array $errors = [];
+
+    public function __construct() {
+        
+    }
 
     public static function isEmpty( ...$values ) : array | bool
     {   
@@ -52,5 +57,45 @@ class Validation
 
     public static function hasCode(int $code, int $isCodeReturn) {
         return $code ? $code : $isCodeReturn;
+    }
+
+    /** ===========================================
+     * 
+     *  metodo de callback
+     * 
+     * ============================================
+     */
+    protected function baseValidate(callable ...$args) : bool
+    {
+        foreach ($args as $arg) { if($arg()) return false; }
+        return true;
+    }
+
+    // retornar verdadeiro se houver erro.
+    protected function helpBaseValidate(
+        string $description,
+        callable $fn,
+        string $messageError
+    ) {
+
+        if($fn()) {
+            $this->errors[$description] = $messageError;
+            return true;
+        }
+
+        return false;
+    }
+
+    //===========================================================
+
+    public function getErrors()
+    {
+        return $this->errors;
+    
+    }
+
+    public function hasErrors(): bool
+    {
+        return !empty($this->errors);
     }
 }

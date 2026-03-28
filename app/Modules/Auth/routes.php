@@ -7,7 +7,7 @@ use app\Modules\Auth\Controller\AuthController;
 
 return [
     [
-        'static' => 'auth',
+        'static' => 'v1/auth',
         'routes' => [
             [   
                 "route" => "/",
@@ -15,17 +15,7 @@ return [
                 "method" => "auth",
                 "http" => ["POST"],
                 "middlewares" => [
-                    new CacheMiddleware, 
-                ],
-                "active" => true
-            ],
-            [   
-                "route" => "/logout",
-                "controller" => new AuthController,
-                "method" => "logout",
-                "http" => ["GET"],
-                "middlewares" => [
-                    new RedirectIfLogoutMiddleware
+                    
                 ],
                 "active" => true
             ]

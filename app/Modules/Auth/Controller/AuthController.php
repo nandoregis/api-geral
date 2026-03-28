@@ -19,17 +19,9 @@ class AuthController extends Controller
 
     public function auth(object $req)
     {
-        // Garante POST
-        if ($req->method !== 'POST') {
-            return parent::apiView(405, [
-                'status'  => 'error',
-                'message' => 'Método não permitido'
-            ]);
-        }
-
-        // Funciona com JSON e POST
-        $user = $req->input('username');
-        $pass = $req->input('password');
+       
+        $user = $req->input('email','');
+        $pass = $req->input('password','');
 
         if (!$user || !$pass) {
             return parent::apiView(400, [
