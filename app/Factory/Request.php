@@ -8,17 +8,18 @@ class Request
 {
     public array $headers;
     public array $body;
+    private array $authTokenDecoded;
+    private array $vars_uri;
+
     public string $httpUri;
     public string $method;
-    private string $authToken;
-    private array $vars_uri;
   
     public function __construct()
     {
         $this->headers = getallheaders();
         $this->method  = $_SERVER['REQUEST_METHOD'];
         $this->httpUri     = strtok($_SERVER['REQUEST_URI'], '?');
-        $this->authToken = Token::get_token();
+        $this->authTokenDecoded = [];
         $this->body = $this->resolveBody();
     }
 
@@ -84,14 +85,9 @@ class Request
         return !empty($_POST) || $this->isJson();
     }
 
-    public function get_auth_token(): string
+    public function get_token_decoded(): array
     {
-        return $this->authToken;
-    }
-
-    public function destroy_auth_token(): void
-    {
-        $this->authToken = '';
+        return $this->authTokenDecoded;
     }
 
     public function uri(string $key, $default = null)

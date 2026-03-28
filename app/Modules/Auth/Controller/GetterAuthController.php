@@ -3,16 +3,21 @@
 namespace app\Modules\Auth\Controller;
 
 use app\Controller\Controller;
+use app\Core\HttpCode;
+use app\Factory\Response;
 use app\Modules\Auth\Model\AuthModel;
+use app\Modules\Auth\Validator\AuthValidator;
 
 class GetterAuthController extends Controller
 
 {
     private $model;
+    private $authValidator;
 
     public function __construct() 
     {
         $this->model = new AuthModel;
+        $this->authValidator = new AuthValidator;
     }
 
     public function getByEmail(string $username) : array
@@ -20,9 +25,26 @@ class GetterAuthController extends Controller
         return $this->model->getByEmail($username);
     }
 
-    public function getByUUID(String $uuid) : Array
+    public function getByUUID(string $uuid) : array
     {
         return $this->model->getByUUID($uuid);
+    }
+
+    public function checkToken(object $req) : array
+    {
+        $token = $req->input('token','');
+
+        $this->authValidator->validateToken($token);    
+
+        if($this->authValidator->hasErrors())
+        {
+            return Response::error(HttpCode::UNAUTHORIZED, $this->authValidator->getErrors());
+        }
+
+        return Response::success(HttpCode::OK,"Token válido!", [
+            'token' => $token
+        ]);
+            
     }
     
 }
