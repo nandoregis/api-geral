@@ -28,6 +28,8 @@ class AuthMiddleware {
         if(!isset($payload)) $this->unauthorizedResponse('Token inválido');
 
         if($this->token_expired($token)) $this->unauthorizedResponse('Token expirado');
+
+        $req->authTokenDecoded = $payload;
         
         return $next($req);
     }
