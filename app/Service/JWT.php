@@ -2,6 +2,9 @@
 
 namespace app\Service;
 
+use DateTime;
+use DateTimeZone;
+
 class JWT
 {
 
@@ -49,6 +52,17 @@ class JWT
 
         return json_decode($payload);
 
+    }
+
+    
+    private function token_expired(string $token) : bool
+    {
+        $token = $this->decode($token);
+        $now = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
+        
+        if($now > $token['expired_date']) return true;
+    
+        return false;
     }
 
     private function base64UrlEncode($data)
