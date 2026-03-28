@@ -60,9 +60,9 @@ http://localhost/seu-projeto/v1
 
 ```json
 {
-  "success": true,
+  "error": false,
   "message": "Sucesso",
-  "data": {}
+  "data": []
 }
 ```
 
