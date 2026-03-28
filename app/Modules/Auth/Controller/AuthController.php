@@ -28,13 +28,4 @@ class AuthController extends Controller
         );
     }
     
-    // verificar se token está expirado.
-    public function token(object $req)
-    {
-        $response = $this->getterAuthController->checkToken($req);
-        return parent::apiView(
-            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
-            $response
-        ); 
-    }
 }

@@ -17,16 +17,7 @@ return [
                 ],
                 "active" => true
             ],
-            [   
-                "route" => "/me",
-                "controller" => new AuthController,
-                "method" => "token",
-                "http" => ["GET"],
-                "middlewares" => [
-                    new RateLimitMiddleware(3, 10)
-                ],
-                "active" => true
-            ],
+           
         ]
     ],
    

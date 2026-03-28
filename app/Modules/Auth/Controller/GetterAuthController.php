@@ -29,22 +29,5 @@ class GetterAuthController extends Controller
     {
         return $this->model->getByUUID($uuid);
     }
-
-    public function checkToken(object $req) : array
-    {
-        $token = $req->input('token','');
-
-        $this->authValidator->validateToken($token);    
-
-        if($this->authValidator->hasErrors())
-        {
-            return Response::error(HttpCode::UNAUTHORIZED, $this->authValidator->getErrors());
-        }
-
-        return Response::success(HttpCode::OK,"Token válido!", [
-            'token' => $token
-        ]);
-            
-    }
     
 }
