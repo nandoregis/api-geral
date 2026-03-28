@@ -2,23 +2,69 @@
 
 namespace app\Middleware;
 
-use app\Core\Redirect;
-use app\Core\Token;
+use app\Core\HttpCode;
+use app\Factory\Response;
+use app\Service\JWT;
+use app\View\ApiView;
+use DateTime;
+use DateTimeZone;
 
 /**
  *  Middleware para verificar se usuario está com token de autenticação.
  */
 class AuthMiddleware {
 
-    public function handle($req, callable $next) 
-    {   
+    private const HEADER_NAME = 'Authorization';
 
-        if (!Token::validate($req->get_auth_token())) 
-        {
-            session_destroy();
-            Redirect::to('/auth');
-        }
+
+    public function handle(object $req, callable $next) 
+    {   
+        $token = $this->extractToken($req);
+        
+        if(!$token) $this->unauthorizedResponse('Token não encontrado');
+
+        $payload = (new JWT)->decode($token);
+
+        if(!isset($payload)) $this->unauthorizedResponse('Token inválido');
+
+        if($this->token_expired($token)) $this->unauthorizedResponse('Token expirado');
         
         return $next($req);
     }
+
+
+    private function extractToken(object $req): string | null
+    {
+        $header = $req->get_header(self::HEADER_NAME);
+
+        if(empty($header)) return null;
+
+        $partsHeader = explode(' ', $header);
+
+        if(strtolower($partsHeader[0]) !== 'bearer' || count($partsHeader) !== 2) return null;
+
+        $token = trim($partsHeader[1]);
+        return $token !== '' ? $token : null;
+    }
+
+    private function token_expired(string $token) : bool
+    {
+        $token = (new JWT)->decode($token);
+        $now = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
+        
+        if($now > $token['expired_date']) return true;
+    
+        return false;
+    }
+
+    private function unauthorizedResponse(string $message)
+    {
+        $response = new ApiView();
+        $response->setStatus(HttpCode::UNAUTHORIZED)
+        ->setData(Response::error(HttpCode::UNAUTHORIZED, $message))
+        ->send();
+        exit;
+    }
+    
+    
 }
