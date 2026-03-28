@@ -25,7 +25,8 @@ return [
                 "method" => "getByUUID",
                 "http" => ["GET"],
                 "middlewares" => [
-                    
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,30)
                 ],
                 "active" => true
             ],
@@ -35,7 +36,8 @@ return [
                 "method" => "getByReference",
                 "http" => ["GET"],
                 "middlewares" => [
-                    
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,30)
                 ],
                 "active" => true
             ],
@@ -45,7 +47,8 @@ return [
                 "method" => "create",
                 "http" => ["POST"],
                 "middlewares" => [
-                    
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,30)
                 ],
                 "active" => true
             ],
@@ -55,7 +58,8 @@ return [
                 "method" => "update",
                 "http" => ["POST"],
                 "middlewares" => [
-                    
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,30)
                 ],
                 "active" => true
             ],
@@ -71,7 +75,8 @@ return [
                 "method" => "createProductVariations",
                 "http" => ["POST"],
                 "middlewares" => [
-                    
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,180)
                 ],
                 "active" => true
             ]
@@ -85,7 +90,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "getAllSizes",
                 "http" => ["GET"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ],
             [
@@ -93,7 +101,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "getSizeByUUID",
                 "http" => ["GET"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ],
             [
@@ -101,7 +112,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "createSize",
                 "http" => ["POST"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ]
         ]
@@ -115,7 +129,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "getAllColors",
                 "http" => ["GET"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ],
             [
@@ -123,7 +140,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "getColorByUUID",
                 "http" => ["GET"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ],
             [
@@ -131,7 +151,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "createColors",
                 "http" => ["POST"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ],
             [
@@ -139,7 +162,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "updateColors",
                 "http" => ["POST"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ],
             [
@@ -147,7 +173,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "deleteColors",
                 "http" => ["POST"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ]
         ]
@@ -160,7 +189,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "getAllSales",
                 "http" => ["GET"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ],
             [
@@ -168,7 +200,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "getSaleByUUID",
                 "http" => ["GET"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ],
             [
@@ -176,7 +211,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "getSaleByUUIDUser",
                 "http" => ["GET"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ],
             [
@@ -184,7 +222,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "getSalesItemsBySaleUUID",
                 "http" => ["GET"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ],
             [
@@ -192,7 +233,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "newSale",
                 "http" => ["POST"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ],
             [
@@ -200,7 +244,10 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "addProductInSale",
                 "http" => ["POST"],
-                "middlewares" => [],
+                "middlewares" => [
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
                 "active" => true
             ]
         ]
