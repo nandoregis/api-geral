@@ -8,15 +8,16 @@ class Request
 {
     public array $headers;
     public array $body;
-    public string $uri;
+    public string $httpUri;
     public string $method;
     private string $authToken;
+    private array $vars_uri;
   
     public function __construct()
     {
         $this->headers = getallheaders();
         $this->method  = $_SERVER['REQUEST_METHOD'];
-        $this->uri     = strtok($_SERVER['REQUEST_URI'], '?');
+        $this->httpUri     = strtok($_SERVER['REQUEST_URI'], '?');
         $this->authToken = Token::get_token();
         $this->body = $this->resolveBody();
     }
@@ -93,13 +94,13 @@ class Request
         $this->authToken = '';
     }
 
-    public function get_uri(): string
+    public function uri(string $key, $default = null)
     {
-        return $this->uri;
+        return $this->vars_uri[$key] ?? $default;
     }
 
     public function set_var(string $key, string $value) {
-        $this->body[$key] = $value;
+        $this->vars_uri[$key] = $value;
     }
 
 

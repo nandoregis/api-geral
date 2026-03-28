@@ -37,7 +37,7 @@ class ProdutosController extends Controller
 
     public function getByUUID(object $req)
     {   
-        $response = $this->getterProdutosController->getByUUID( $req->input('uuid') );
+        $response = $this->getterProdutosController->getByUUID( $req->uri('uuid') );
         return parent::apiView(
             Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
             $response
@@ -46,7 +46,7 @@ class ProdutosController extends Controller
 
     public function getByReference(object $req)
     {   
-        $response = $this->getterProdutosController->getByReference( $req->input('reference') );
+        $response = $this->getterProdutosController->getByReference( $req->uri('reference') );
         return parent::apiView(
             Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
             $response

@@ -78,7 +78,7 @@ class SetterProdutosController
     public function update(object $req)
     { 
         
-        $uuid = $req->input('uuid','');
+        $uuid = $req->uri('uuid','');
         $reference = $req->input('reference','');
         $name = $req->input('name','');
         
