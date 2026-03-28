@@ -76,7 +76,7 @@ http://localhost/seu-projeto/v1
 * `GET /v1/produtos/{uuid}` → Buscar por UUID
 * `GET /v1/produtos/reference/{reference}` → Buscar por referência
 * `POST /v1/produtos/c/create` → Criar produto
-* `POST /v1/produtos/u/update` → Atualizar produto
+* `PUT /v1/produtos/u/update` → Atualizar produto
 
 ---
 
@@ -85,8 +85,8 @@ http://localhost/seu-projeto/v1
 * `GET /v1/colors/` → Listar cores
 * `GET /v1/colors/{uuid}` → Buscar por UUID
 * `POST /v1/colors/c/create` → Criar cor
-* `POST /v1/colors/u/update` → Atualizar cor
-* `POST /v1/colors/d/delete` → Remover cor
+* `PUT /v1/colors/u/update` → Atualizar cor
+* `DELETE /v1/colors/d/delete` → Remover cor
 
 ---
 

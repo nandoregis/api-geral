@@ -56,7 +56,7 @@ return [
                 "route" => "/u/update",
                 "controller" => new ProdutosController,
                 "method" => "update",
-                "http" => ["POST"],
+                "http" => ["PUT"],
                 "middlewares" => [
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,30)
@@ -161,7 +161,7 @@ return [
                 "route" => "/u/update",
                 "controller" => new ProdutosController,
                 "method" => "updateColors",
-                "http" => ["POST"],
+                "http" => ["PUT"],
                 "middlewares" => [
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
