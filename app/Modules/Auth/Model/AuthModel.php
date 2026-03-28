@@ -15,20 +15,19 @@ class AuthModel extends Model
 
     }
 
-    public function getUserForUUID(String $uuid) : Array | null 
+    public function getByUUID(String $uuid) : array
     {
 
-        $sql = "
-            SELECT 
-                uuid,
-                name,
-                hash_password
+        $sql = "SELECT 
+                    uuid,
+                    `name`,
+                    hash_password
             FROM users
             WHERE uuid = :uuid
             LIMIT 1
         ";
 
-        $stmt = parent::usersDB()->prepare($sql);
+        $stmt = parent::PrimayDB()->prepare($sql);
         $stmt->bindValue(':uuid', $uuid);
         $stmt->execute();
 
@@ -37,22 +36,20 @@ class AuthModel extends Model
         return $user ?: [];
     }
 
-    public function getForUsername(String $username) : Array 
+    public function getByEmail(string $email) : array 
     {
 
-        $sql = "
-            SELECT 
-                uuid,
-                name,
-                hash_password,
-                `key`
+        $sql = "SELECT 
+                    uuid,
+                    `name`,
+                    hash_password
             FROM users
-            WHERE username = :username
+            WHERE email = :email
             LIMIT 1
         ";
 
-        $stmt = parent::usersDB()->prepare($sql);
-        $stmt->bindValue(':username', $username);
+        $stmt = parent::PrimayDB()->prepare($sql);
+        $stmt->bindValue(':email', $email);
         $stmt->execute();
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);

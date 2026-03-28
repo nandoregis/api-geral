@@ -50,6 +50,11 @@ class Validation
         return is_numeric($value);
     }
 
+    public static function isEmail( mixed $email) 
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+
     public static function arrayHasKey(array $arr, string $key)
     {
         return isset($arr[$key]) ? $arr[$key] : false;
@@ -58,6 +63,8 @@ class Validation
     public static function hasCode(int $code, int $isCodeReturn) {
         return $code ? $code : $isCodeReturn;
     }
+
+  
 
     /** ===========================================
      * 
