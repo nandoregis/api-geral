@@ -16,7 +16,7 @@ define('API_VERSION', 'v1.0.0');
 
 // CONST CHAVE SECRETA JWT
 define('SECRET_KEY', $env['JWT_SECRET_KEY']);
-define('EXPIRED_JWT', '+1 minute'); // -> Respeitar regra do Datetime, o modify -> ( +2 minutes, +1 hour, +2 hours , +1 day 2 hours 30 minutes)
+define('EXPIRED_JWT', '+3 minutes'); // -> Respeitar regra do Datetime, o modify -> ( +2 minutes, +1 hour, +2 hours , +1 day 2 hours 30 minutes)
 
 // CONST NOME DA SESSION E DO COOKIE
 define('COOKIE_NAME','auth');

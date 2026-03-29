@@ -27,7 +27,8 @@ return [
                 "method" => "getByUUID",
                 "http" => ["GET"],
                 "middlewares" => [
-                    // new ApiKeyMiddleware, 
+                    new AuthMiddleware, 
+                    // new ApiKeyMiddleware,
                     new RateLimitMiddleware(5,30)
                 ],
                 "active" => true
@@ -38,6 +39,7 @@ return [
                 "method" => "getByReference",
                 "http" => ["GET"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,30)
                 ],
@@ -49,6 +51,7 @@ return [
                 "method" => "create",
                 "http" => ["POST"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,30)
                 ],
@@ -60,6 +63,7 @@ return [
                 "method" => "update",
                 "http" => ["PUT"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,30)
                 ],
@@ -77,6 +81,7 @@ return [
                 "method" => "createProductVariations",
                 "http" => ["POST"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,180)
                 ],
@@ -93,6 +98,7 @@ return [
                 "method" => "getAllSizes",
                 "http" => ["GET"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
@@ -104,6 +110,7 @@ return [
                 "method" => "getSizeByUUID",
                 "http" => ["GET"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
@@ -115,6 +122,7 @@ return [
                 "method" => "createSize",
                 "http" => ["POST"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
@@ -132,6 +140,7 @@ return [
                 "method" => "getAllColors",
                 "http" => ["GET"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
@@ -143,6 +152,7 @@ return [
                 "method" => "getColorByUUID",
                 "http" => ["GET"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
@@ -154,6 +164,7 @@ return [
                 "method" => "createColors",
                 "http" => ["POST"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
@@ -165,6 +176,7 @@ return [
                 "method" => "updateColors",
                 "http" => ["PUT"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
@@ -176,6 +188,7 @@ return [
                 "method" => "deleteColors",
                 "http" => ["POST"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
