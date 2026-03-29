@@ -205,6 +205,7 @@ return [
                 "method" => "getAllSales",
                 "http" => ["GET"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
@@ -216,6 +217,7 @@ return [
                 "method" => "getSaleByUUID",
                 "http" => ["GET"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
@@ -227,6 +229,7 @@ return [
                 "method" => "getSaleByUUIDUser",
                 "http" => ["GET"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
@@ -238,6 +241,7 @@ return [
                 "method" => "getSalesItemsBySaleUUID",
                 "http" => ["GET"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
@@ -249,6 +253,7 @@ return [
                 "method" => "newSale",
                 "http" => ["POST"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
@@ -260,6 +265,7 @@ return [
                 "method" => "addProductInSale",
                 "http" => ["POST"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
