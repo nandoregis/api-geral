@@ -6,14 +6,15 @@ use app\Core\Token;
 
 class Request
 {
-    public array $headers;
-    public array $body;
-    private array $authTokenDecoded;
-    private array $vars_uri;
-
+  
     public string $httpUri;
     public string $method;
+    public array $authTokenDecoded;
+    public array $headers;
+    public array $body;
   
+    private array $vars_uri;
+    
     public function __construct()
     {
         $this->headers = getallheaders();
