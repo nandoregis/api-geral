@@ -1,6 +1,7 @@
 <?php
 
 use app\Middleware\ApiKeyMiddleware;
+use app\Middleware\AuthMiddleware;
 use app\Middleware\RateLimitMiddleware;
 use app\Modules\Produtos\Controller\ProdutosController;
 
@@ -14,6 +15,7 @@ return [
                 "method" => "getAll",
                 "http" => ["GET"],
                 "middlewares" => [
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,30)
                 ],

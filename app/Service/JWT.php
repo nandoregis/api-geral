@@ -50,7 +50,7 @@ class JWT
 
         if($assinaturaEsperada !== $assinatura) return ['error' => true, 'message' => 'Assinatura inválida'];
 
-        return json_decode($payload);
+        return json_decode($payload, true);
 
     }
 
@@ -58,11 +58,7 @@ class JWT
     public function isTokenExpired(string $token) : bool
     {
         $token = $this->decode($token);
-        $now = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
-        
-        if($now > $token['expired_date']) return true;
-    
-        return false;
+        return time() > $token['expired_date'];
     }
 
     private function base64UrlEncode($data)
