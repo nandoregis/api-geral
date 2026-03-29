@@ -1,18 +1,30 @@
 <?php
 
 require '../router.php';
+use app\Core\Web;
+use app\Factory\Request;
+use app\Middleware\RateLimitMiddleware;
+use app\View\ApiView;
+
+$routes = new Web;
 
 get('/', function () {
 
-    http_response_code(200);
+    $rate = new RateLimitMiddleware(20,30);
+    $rate->handle(new Request, function () {});
 
-    echo json_encode([
-        'name' => 'Portfolio API',
-        'version' => 'v1.0.0',
+    $view = new ApiView();
+    $view->setStatus(200)
+    ->setData([
+        'name' => 'Projetos portfolio API',
+        'version' => API_VERSION,
         'status' => 'online',
-        'environment' => 'development',
+        'environment' => ENVIRONMENT,
         'timestamp' => date('c')
-    ]);
+    ])->send();
+
 });
+
+$routes->run();
 
 any('/404', 'app/Pages/404.php');
