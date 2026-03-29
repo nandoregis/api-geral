@@ -156,14 +156,15 @@ class SetterProdutosModel extends Model
     {
         $uuid = UUID::v4();
 
-        $sql = "INSERT INTO sales (uuid, user_uuid, total, created_at)
-            VALUES (:uuid, :user_uuid, :total, NOW())";
+        $sql = "INSERT INTO sales (uuid, user_uuid, total,`status`, created_at)
+            VALUES (:uuid, :user_uuid, :total, :status, NOW())";
 
         try {
             $stmt = parent::PrimayDB()->prepare($sql);
             
             $stmt->bindValue(':uuid', $uuid);
             $stmt->bindValue(':user_uuid', $user_uuid);
+            $stmt->bindValue(':status', 0);
             $stmt->bindValue(':total', 0.0);
 
             $stmt->execute();
@@ -272,6 +273,22 @@ class SetterProdutosModel extends Model
 
             return ['uuid' => $uuid, 'quantity' => $quantity, 'price' => $price];
 
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            return []; 
+        }
+    }
+
+    public function finishSale(string $uuid) : array
+    {
+        $sql = "UPDATE sales SET `status` = 1 WHERE uuid = :uuid";
+
+        try {
+            $stmt = parent::PrimayDB()->prepare($sql);
+            $stmt->bindValue(':uuid', $uuid);
+            $stmt->execute();
+
+            return $this->getterProdutosModel->getSaleByUUID($uuid);
         } catch (\Exception $e) {
             error_log($e->getMessage());
             return []; 

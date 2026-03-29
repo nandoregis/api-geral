@@ -149,6 +149,15 @@ class ProdutosController extends Controller
         );
     }
 
+    public function finishSale(object $req) 
+    {
+        $response = $this->setterProdutosController->finishSale($req);
+         return parent::apiView( 
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED),
+            $response
+        );
+    }
+    
     public function saleProducts() {}
 
     public function stockProductEntry() {}

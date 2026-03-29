@@ -260,6 +260,18 @@ return [
                 "active" => true
             ],
             [
+                "route" => "/finish/{uuid}",
+                "controller" => new ProdutosController,
+                "method" => "finishSale",
+                "http" => ["PUT"],
+                "middlewares" => [
+                    new AuthMiddleware,
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,60)
+                ],
+                "active" => true
+            ],
+            [
                 "route" => "/itens/c/create",
                 "controller" => new ProdutosController,
                 "method" => "addProductInSale",

@@ -294,6 +294,23 @@ class SetterProdutosController
         return Response::success(HttpCode::OK, "Produto atualizado na venda", $result);
     }
 
+    public function finishSale(object $req) {
+
+        $uuid = $req->input('uuid');
+        $this->productValidator->validateUUID($uuid);
+
+        if ($this->productValidator->hasErrors()) {
+            return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
+        }
+
+        $result = $this->setterProdutosModel->finishSale($uuid);
+
+        if(!$result) {
+            return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para finalizar a venda");
+        }
+
+        return Response::success(HttpCode::OK, "Venda finalizada", $result);
+    }
 
     public function stockProductEntry() {}
 
