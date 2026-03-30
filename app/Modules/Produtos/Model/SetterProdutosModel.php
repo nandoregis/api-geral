@@ -156,15 +156,17 @@ class SetterProdutosModel extends Model
     {
         $uuid = UUID::v4();
 
-        $sql = "INSERT INTO sales (uuid, user_uuid, total,`status`, created_at)
-            VALUES (:uuid, :user_uuid, :total, :status, NOW())";
+        $sql = "INSERT INTO sales (uuid, user_uuid, total,`status`, payment, created_at)
+            VALUES (:uuid, :user_uuid, :total, :status, :payment, NOW())";
 
         try {
+
             $stmt = parent::PrimayDB()->prepare($sql);
             
             $stmt->bindValue(':uuid', $uuid);
             $stmt->bindValue(':user_uuid', $user_uuid);
             $stmt->bindValue(':status', 0);
+            $stmt->bindValue(':payment', "pendente");
             $stmt->bindValue(':total', 0.0);
 
             $stmt->execute();
@@ -281,27 +283,191 @@ class SetterProdutosModel extends Model
 
     public function finishSale(string $uuid) : array
     {
-        $sql = "UPDATE sales SET `status` = 1 WHERE uuid = :uuid";
+        
+        $pdo = parent::PrimayDB();
+        $pdo->beginTransaction();
+
+        $sql = "UPDATE sales SET total = :total, `status` = :status, payment = :payment WHERE uuid = :uuid";
 
         try {
-            $stmt = parent::PrimayDB()->prepare($sql);
+
+            $saleVariations = $this->getterProdutosModel->getSaleItemsBySaleUUID($uuid);
+            $total = 0;
+            
+            foreach ($saleVariations as $key => $value) 
+            {
+                $product_uuid = $value['product_uuid'];
+                $total = $total + ($value['quantity'] * $value['price']);
+
+                $this->stockProductExit($product_uuid, $value['variation_uuid'], $value['quantity'], $pdo);
+                $this->stockMovements($product_uuid,$value['variation_uuid'],'out',$value['quantity'],'Saída manual no estoque', $pdo);
+            }
+       
+            $stmt = $pdo->prepare($sql);
+
             $stmt->bindValue(':uuid', $uuid);
+            $stmt->bindValue(':total', $total);
+            $stmt->bindValue(':status', 1);
+            $stmt->bindValue(':payment', "dinheiro");
+            
             $stmt->execute();
 
+            $pdo->commit();
+
             return $this->getterProdutosModel->getSaleByUUID($uuid);
+
         } catch (\Exception $e) {
+            $pdo->rollBack();
             error_log($e->getMessage());
             return []; 
         }
     }
+    
 
     // ===============================================================================
     //    Movimentação de estoque, entrada e saida, tabela stock e stock_movements
     // ===============================================================================
 
-    public function stockProductEntry() {}
+    public function entryVariationsProductInStock(string $product_uuid, array $variation) 
+    {
+        $pdo = parent::PrimayDB();
+        $pdo->beginTransaction();
 
-    public function stockProductExit() {}
+        try {
+            
+            foreach ($variation as $key => $value) 
+            {
+                $variation_uuid = $value['uuid'];
+                $quantity = $value['quantity'];
+
+                $existProductVariation = $this->getterProdutosModel->getStockByVariationUUID($variation_uuid);
+
+                if(!empty($existProductVariation)) {
+                    $this->stockProductUpdateEntry($product_uuid, $variation_uuid, $quantity, $pdo);
+                } else {
+                    $this->stockProductInsertEntry($product_uuid, $variation_uuid, $quantity, $pdo);
+                }
+
+            }
+            
+            $pdo->commit();
+
+            return $this->getterProdutosModel->getStockByProductUUID($product_uuid);
+
+        } catch (\Exception $e) {
+            $pdo->rollBack();
+            error_log($e->getMessage());
+            return []; 
+        }
+
+    }
+
+    public function exitVariationsProductInStock(string $product_uuid, array $variation) 
+    {
+        $pdo = parent::PrimayDB();
+        $pdo->beginTransaction();
+
+        try {
+            
+            foreach ($variation as $key => $value) 
+            {
+                $variation_uuid = $value['uuid'];
+                $quantity = $value['quantity'];
+
+                $this->stockProductExit($product_uuid, $variation_uuid, $quantity, $pdo);
+                $this->stockMovements($product_uuid,$variation_uuid,'out',$quantity,'Saída manual no estoque', $pdo);
+
+            }
+            
+            $pdo->commit();
+
+            return $this->getterProdutosModel->getStockByProductUUID($product_uuid);
+
+        } catch (\Exception $e) {
+            $pdo->rollBack();
+            error_log($e->getMessage());
+            return []; 
+        }
+
+    }
+
+    private function stockProductInsertEntry(string $product_uuid, string $variation_uuid, int $quantity, $pdo = null)
+    {
+        if(!$pdo) $pdo = parent::PrimayDB();
+
+        $sql = "INSERT INTO stock (uuid, product_uuid, variation_uuid, quantity, updated_at)
+            VALUES (:uuid, :product_uuid, :variation_uuid, :quantity, NOW())";
+
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindValue(':uuid', UUID::v4());
+        $stmt->bindValue(':product_uuid', $product_uuid);
+        $stmt->bindValue(':variation_uuid', $variation_uuid);
+        $stmt->bindValue(':quantity', $quantity);
+        $stmt->execute();
+
+        $this->stockMovements($product_uuid,$variation_uuid,'in',$quantity,'Entrada manual no estoque', $pdo);
+
+        return ['uuid' => $variation_uuid, 'quantity' => $quantity];
+    }
+
+    private function stockProductUpdateEntry(string $product_uuid, string $variation_uuid, int $quantity, $pdo = null) : array
+    {   
+        if(!$pdo) $pdo = parent::PrimayDB();
+        
+        $sql = "UPDATE stock 
+                SET quantity = COALESCE(quantity, 0) + :quantity,
+                    updated_at = NOW()
+                WHERE product_uuid = :product_uuid AND variation_uuid = :variation_uuid";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':quantity', $quantity);
+        $stmt->bindValue(':product_uuid', $product_uuid);
+        $stmt->bindValue(':variation_uuid', $variation_uuid);
+        $stmt->execute();
+
+        $this->stockMovements($product_uuid,$variation_uuid,'in',$quantity,'Entrada manual no estoque', $pdo);
+
+        return ['uuid' => $variation_uuid, 'quantity' => $quantity];
+    
+    }
+
+    private function stockProductExit(string $product_uuid, string $variation_uuid, int $quantity, $pdo = null )  : array
+    {
+        if(!$pdo) $pdo = parent::PrimayDB();
+
+        $sql = "UPDATE stock SET quantity = quantity - :quantity WHERE variation_uuid = :variation_uuid AND quantity >= :quantity";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':quantity', $quantity);
+        $stmt->bindValue(':variation_uuid', $variation_uuid);
+        $stmt->execute();
+
+        return ['product_uuid' => $product_uuid, 'variation_uuid' => $variation_uuid, 'quantity' => $quantity];
+            
+    }
+
+    private function stockMovements(string $product_uuid, string $variation_uuid, string $type, int $quantity, string $reason, $pdo = null) : array
+    {   
+
+        $uuid = UUID::v4();
+        
+        $sql = "INSERT INTO stock_movements (uuid, product_uuid, variation_uuid,`type`, quantity, reason, created_at)
+            VALUES (:uuid, :product_uuid, :variation_uuid, :type, :quantity, :reason, NOW())";
+
+        if(!$pdo) $pdo = parent::PrimayDB();
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':uuid', $uuid);
+        $stmt->bindValue(':product_uuid', $product_uuid);
+        $stmt->bindValue(':variation_uuid', $variation_uuid);
+        $stmt->bindValue(':type',$type);
+        $stmt->bindValue(':quantity', $quantity);
+        $stmt->bindValue(':reason', $reason);
+        $stmt->execute();
+
+        return ['uuid' => $uuid, 'product_uuid' => $product_uuid, 'variation_uuid' => $variation_uuid, 'type' => $type, 'quantity' => $quantity, 'reason' => $reason];
+    }
 
     // ==================================================================
     //        METODOS PARA TABELA SIZE, PRODUCT_VARIATIONS E COLORS

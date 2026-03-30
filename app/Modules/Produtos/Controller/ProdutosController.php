@@ -152,17 +152,36 @@ class ProdutosController extends Controller
     public function finishSale(object $req) 
     {
         $response = $this->setterProdutosController->finishSale($req);
-         return parent::apiView( 
+        return parent::apiView( 
             Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED),
             $response
         );
     }
     
-    public function saleProducts() {}
+    //=========================================================================
+    //
+    //                                 STOCK          
+    //
+    //=========================================================================
 
-    public function stockProductEntry() {}
 
-    public function stockProductExit() {}
+    public function stockProductIn(object $req) 
+    {
+       $response = $this->setterProdutosController->stockProductIn($req);
+        return parent::apiView(     
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED),
+            $response
+        );
+    }
+
+    public function stockProductOut(object $req) 
+    {
+        $response = $this->setterProdutosController->stockProductOut($req);
+        return parent::apiView( 
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED),
+            $response
+        );
+    }
 
     //=========================================================================
     //

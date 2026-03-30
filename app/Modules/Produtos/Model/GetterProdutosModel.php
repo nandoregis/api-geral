@@ -63,7 +63,6 @@ class GetterProdutosModel extends Model
         return $data ? true : false;
     } 
 
-
     public function getProductVariationsByUUID(string $uuid) : array
     {
         $sql = "SELECT 
@@ -201,16 +200,16 @@ class GetterProdutosModel extends Model
 
             FROM sale_items si
 
-            INNER JOIN products p 
+            LEFT JOIN products p 
                 ON p.uuid = si.product_uuid
 
-            INNER JOIN product_variations pv 
+            LEFT JOIN product_variations pv 
                 ON pv.uuid = si.variation_uuid
 
-            INNER JOIN sizes s 
+            LEFT JOIN sizes s 
                 ON s.uuid = pv.size_uuid
 
-            INNER JOIN colors c 
+            LEFT JOIN colors c 
                 ON c.uuid = pv.color_uuid
 
             WHERE si.sale_uuid = ?
@@ -223,6 +222,30 @@ class GetterProdutosModel extends Model
     {
         $sql = "SELECT * FROM sale_items WHERE sale_uuid = ? AND variation_uuid = ? AND price = ? LIMIT 1";
         return $this->fetchOne($sql, [$sale_uuid, $variation_uuid, $price]);
+    }
+    
+    //=======================================================
+    //                                                      |
+    //                  METODOS stock                       |
+    //                                                      |
+    //=======================================================
+
+    public function getStockByUUID(string $uuid) : array
+    {
+        $sql = "SELECT * FROM stock WHERE uuid = ?";
+        return $this->fetchOne($sql, [$uuid]);
+    }
+
+    public function getStockByProductUUID(string $product_uuid) : array
+    {
+        $sql = "SELECT * FROM stock WHERE product_uuid = ?";
+        return $this->fetchOne($sql, [$product_uuid]);
+    }
+
+    public function getStockByVariationUUID(string $variation_uuid) : array
+    {
+        $sql = "SELECT * FROM stock WHERE variation_uuid = ?";
+        return $this->fetchOne($sql, [$variation_uuid]);
     }
       
     //=======================================================

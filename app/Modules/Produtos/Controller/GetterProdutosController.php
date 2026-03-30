@@ -46,7 +46,7 @@ class GetterProdutosController
 
     public function getSizeByUUID(object $req) : array
     {
-        return Response::success(200, "Tamanho pego pelo UUID", $this->getterProdutosModel->getSizeByUUID($req->input('uuid')));
+        return Response::success(200, "Tamanho pego pelo UUID", $this->getterProdutosModel->getSizeByUUID($req->uri('uuid')));
     }
 
     public function checkNameSizeWithDifferentUUID(string $uuid, string $name)
@@ -67,7 +67,7 @@ class GetterProdutosController
 
     public function getColorByUUID(object $req) 
     {
-        return Response::success(200, "Cor pego pelo UUID", $this->getterProdutosModel->getColorByUUID($req->input('uuid')));
+        return Response::success(200, "Cor pego pelo UUID", $this->getterProdutosModel->getColorByUUID($req->uri('uuid')));
     }
 
     public function checkNameColorWithDifferentUUID (string $uuid, string $name) 
@@ -88,17 +88,17 @@ class GetterProdutosController
 
     public function getSaleByUUID(object $req) : array
     {
-        return Response::success(200, "Venda pego pelo UUID", $this->getterProdutosModel->getSaleByUUID($req->input('uuid') ));
+        return Response::success(200, "Venda pego pelo UUID", $this->getterProdutosModel->getSaleByUUID($req->uri('uuid') ));
     }
 
     public function getSalesByUUIDUser(object $req) : array
     {
-        return Response::success(200, "Venda pego pelo UUID do usuario", $this->getterProdutosModel->getSalesByUUIDUser($req->input('uuid_user') ));
+        return Response::success(200, "Venda pego pelo UUID do usuario", $this->getterProdutosModel->getSalesByUUIDUser($req->uri('uuid_user') ));
     }
 
     public function getSaleItemsBySaleUUID(object $req)  : array
     {
-        return Response::success(200, "Itens da venda pego pelo UUID da venda", $this->getterProdutosModel->getSaleItemsBySaleUUID($req->input('sale_uuid') )); 
+        return Response::success(200, "Itens da venda pego pelo UUID da venda", $this->getterProdutosModel->getSaleItemsBySaleUUID($req->uri('sale_uuid') )); 
     }
     
 }

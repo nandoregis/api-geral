@@ -193,7 +193,7 @@ class SetterProdutosController
     public function newSale(object $req) : array
     {
        
-        $user_uuid = $req->input('user_uuid');
+        $user_uuid = $req->input('user_uuid','');
         $this->productValidator->validateUUID($user_uuid);
 
         if ($this->productValidator->hasErrors()) {
@@ -214,9 +214,9 @@ class SetterProdutosController
     public function addProductInSale(object $req) 
     {
 
-        $sale_uuid = $req->input('sale_uuid');
-        $product_uuid = $req->input('product_uuid');
-        $variations = $req->input('variations'); // is array
+        $sale_uuid = $req->input('sale_uuid','');
+        $product_uuid = $req->input('product_uuid','');
+        $variations = $req->input('variations',[]); // is array
         $variationsFromUpdate = [];
         $variationsFromInsert = [];
         $insertResult = [];
@@ -267,15 +267,19 @@ class SetterProdutosController
 
         $saleProducts = $this->getterProdutosModel->getSaleItemsBySaleUUID($sale_uuid);
 
+        if(empty($saleProducts)) {
+            return Response::error(HttpCode::INTERNAL_SERVER_ERROR,'Está voltando vazial na busca, mas tem produto');
+        }
+
         return Response::success(HttpCode::CREATED, "Itens da venda", $saleProducts);
             
     }
 
     public function updateProductInSale(object $req) {
 
-        $uuid = $req->input('uuid');
-        $quantity = $req->input('quantity');
-        $price = $req->input('price');
+        $uuid = $req->input('uuid','');
+        $quantity = $req->input('quantity',0);
+        $price = $req->input('price','');
 
         $this->productValidator->validateUUID($uuid);
         $this->productValidator->validateQuantity($quantity);
@@ -296,11 +300,45 @@ class SetterProdutosController
 
     public function finishSale(object $req) {
 
-        $uuid = $req->input('uuid');
+        $uuid = $req->uri('uuid','');
+        $payment = $req->input('payment','');
+
         $this->productValidator->validateUUID($uuid);
+        $this->productValidator->validateName($payment);
 
         if ($this->productValidator->hasErrors()) {
             return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
+        }
+         
+        $sale = $this->getterProdutosModel->getSaleByUUID($uuid);
+        $saleItems = $this->getterProdutosModel->getSaleItemsBySaleUUID($uuid);
+
+        if($payment === 'pendente'){
+            return Response::error(HttpCode::UNAUTHORIZED,'Venda não pode finalizar com opção de pagamento pendente');
+        }
+
+        if(empty($saleItems)) return Response::error(HttpCode::NOT_FOUND, "Venda não pode fechar sem produtos");
+
+        if( isset($sale) ) {
+            if($sale['status'] == 1) return Response::error(HttpCode::UNAUTHORIZED, 'Venda já finalizada');
+        }
+        
+        foreach ($saleItems as $key => $value) 
+        {   
+            $quantity =  isset($value['quantity']) ? (int) $value['quantity'] : "";
+            $variation_uuid = isset($value['variation_uuid']) ? $value['variation_uuid'] : "";
+           
+            $quantityStock = $this->getterProdutosModel->getStockByVariationUUID($variation_uuid); 
+
+            if(empty($quantityStock)) {
+                return Response::error(HttpCode::NOT_FOUND,"Não existe produto em estoque com essa variação");
+                break;
+            }
+
+            if( $quantity > $quantityStock['quantity']) {
+                return Response::error(HttpCode::UNAUTHORIZED,"Quantidade maior do que existente em estoque");
+                break;
+            }
         }
 
         $result = $this->setterProdutosModel->finishSale($uuid);
@@ -312,9 +350,68 @@ class SetterProdutosController
         return Response::success(HttpCode::OK, "Venda finalizada", $result);
     }
 
-    public function stockProductEntry() {}
+    //=========================================================================
+    //
+    //                                 STOCK          
+    //
+    //=========================================================================
 
-    public function stockProductExit() {}
+    public function stockProductIn(object $req) {
+        $product_uuid = $req->input('product_uuid', '');
+        $variations = $req->input('variations', []);
+
+        if($this->hasErrosProductStock($req)) {
+            return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
+        }
+
+        $result = $this->setterProdutosModel->entryVariationsProductInStock($product_uuid, $variations);
+
+        if(!$result) {
+           return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para entrada no estoque");
+        }
+
+        return Response::success(HttpCode::CREATED, "Entrada no estoque", $result);
+    }
+
+    public function stockProductOut(object $req) {
+        
+        $product_uuid = $req->input('product_uuid', '');
+        $variations = $req->input('variations', []);
+
+        if($this->hasErrosProductStock($req)) {
+            return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
+        }
+
+        $result = $this->setterProdutosModel->exitVariationsProductInStock($product_uuid, $variations);
+
+        if(!$result) {
+           return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para saída no estoque");
+        }
+
+        return Response::success(HttpCode::CREATED, "Saida do estoque", $result); 
+        
+    }
+
+    private function hasErrosProductStock(object $req)
+    {
+        $product_uuid = $req->input('product_uuid', '');
+        $variations = $req->input('variations', []);
+
+        $this->productValidator->validateUUID($product_uuid);
+        $this->productValidator->validateArrayVariations($variations);
+
+        foreach ($variations as $key => $value) 
+        {
+            $uuid = isset($value['uuid']) ? $value['uuid'] : "";
+            $quantity = isset($value['quantity']) ? $value['quantity'] : "";
+
+            $this->productValidator->validateUUID($uuid);
+            $this->productValidator->validateQuantity($quantity);
+        }
+
+        return $this->productValidator->hasErrors();
+        
+    }
     
     //=========================================================================
     //

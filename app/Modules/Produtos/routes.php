@@ -197,6 +197,36 @@ return [
         ]
     ],
     [
+        'static' => 'v1/stock',
+        'routes' => [
+            [
+                "route" => "/in",
+                "controller" => new ProdutosController,
+                "method" => "stockProductIn",
+                "http" => ["POST"],
+                "middlewares" => [
+                    new AuthMiddleware,
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,5)
+                ],
+                "active" => true
+            ],
+            [
+                "route" => "/out",
+                "controller" => new ProdutosController,
+                "method" => "stockProductOut",
+                "http" => ["POST"],
+                "middlewares" => [
+                    new AuthMiddleware,
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(5,5)
+                ],
+                "active" => true
+            ]
+        ]
+            
+    ],
+    [
         'static' => 'v1/sales',
         'routes' => [
             [
@@ -217,7 +247,7 @@ return [
                 "method" => "getSaleByUUID",
                 "http" => ["GET"],
                 "middlewares" => [
-                    new AuthMiddleware,
+                    // new AuthMiddleware,
                     // new ApiKeyMiddleware, 
                     new RateLimitMiddleware(5,60)
                 ],
@@ -265,9 +295,9 @@ return [
                 "method" => "finishSale",
                 "http" => ["PUT"],
                 "middlewares" => [
-                    new AuthMiddleware,
+                    // new AuthMiddleware,
                     // new ApiKeyMiddleware, 
-                    new RateLimitMiddleware(5,60)
+                    new RateLimitMiddleware(500,10)
                 ],
                 "active" => true
             ],
