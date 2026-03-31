@@ -20,7 +20,10 @@ get('/', function () {
         'version' => API_VERSION,
         'status' => 'online',
         'environment' => ENVIRONMENT,
-        'timestamp' => date('c')
+        'timestamp' => date('c'),
+        "author" => "Luís Fernando",
+        "github" => 'https://github.com/nandoregis',
+        "project" => 'https://github.com/nandoregis/api-geral'
     ])->send();
 
 });
