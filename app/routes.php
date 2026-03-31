@@ -30,4 +30,12 @@ get('/', function () {
 
 $routes->run();
 
-any('/404', 'app/Pages/404.php');
+any('/404', function() { 
+    $view = new ApiView();
+    $view->setStatus(404)
+    ->setData([
+        'error' => true,
+        'message' => "Not found"
+    ])->send();
+
+});

@@ -43,9 +43,21 @@ function route($route, $path_to_include)
 		}
 	}
 	if ($route == "/404") {
+
+		//==== Luís Fernando, Adaptação do código quando a rota for 404, aceitar callable ===
+
+		if(is_callable($callback))
+		{
+			call_user_func_array($callback, []);
+			exit();
+		}
+
+		//======================================
+		
 		include_once __DIR__ . "/$path_to_include";
 		exit();
 	}
+
 	$request_url = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
 	$request_url = rtrim($request_url, '/');
 	$request_url = strtok($request_url, '?');
