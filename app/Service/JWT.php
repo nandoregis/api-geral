@@ -58,6 +58,9 @@ class JWT
     public function isTokenExpired(string $token) : bool
     {
         $token = $this->decode($token);
+        if( isset($token['error']) ) {
+            return true;
+        }
         return time() > $token['expired_date'];
     }
 
