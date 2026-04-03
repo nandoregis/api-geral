@@ -13,7 +13,17 @@ return [
                 "method" => "auth",
                 "http" => ["POST"],
                 "middlewares" => [
-                    new RateLimitMiddleware(6,60)
+                    new RateLimitMiddleware(5,10)
+                ],
+                "active" => true
+            ],
+            [   
+                "route" => "/me",
+                "controller" => new AuthController,
+                "method" => "auth",
+                "http" => ["POST"],
+                "middlewares" => [
+                    new RateLimitMiddleware(100,10)
                 ],
                 "active" => true
             ],
