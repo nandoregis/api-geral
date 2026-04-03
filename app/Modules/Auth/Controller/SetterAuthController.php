@@ -63,4 +63,16 @@ class SetterAuthController
         ]);
     }
 
+    public function me(object $req)
+    {
+        $token = $req->input('token','');
+        $expired = (new JWT)->isTokenExpired($token);
+
+        if($expired) return Response::error(HttpCode::UNAUTHORIZED, "Token expirado!");
+
+        $tokenData = (new JWT)->decode($token);
+
+        return Response::success(HttpCode::OK, "Dados do usuário", $tokenData);
+    }
+
 }

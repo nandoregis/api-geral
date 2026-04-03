@@ -20,7 +20,7 @@ return [
             [   
                 "route" => "/me",
                 "controller" => new AuthController,
-                "method" => "auth",
+                "method" => "me",
                 "http" => ["POST"],
                 "middlewares" => [
                     new RateLimitMiddleware(100,10)
