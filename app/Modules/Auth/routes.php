@@ -18,10 +18,10 @@ return [
                 "active" => true
             ],
             [   
-                "route" => "/me",
+                "route" => "/me/{token}",
                 "controller" => new AuthController,
                 "method" => "me",
-                "http" => ["POST"],
+                "http" => ["PUT"],
                 "middlewares" => [
                     new RateLimitMiddleware(100,10)
                 ],
