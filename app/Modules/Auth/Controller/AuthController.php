@@ -27,5 +27,14 @@ class AuthController extends Controller
             $response
         );
     }
+
+    public function me(object $req)
+    {
+        $response = $this->setterAuthController->me($req);
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
     
 }
