@@ -33,12 +33,15 @@ class RateLimitMiddleware
 
         $lock = fopen($lockFile, 'c'); // abrir arquivo ou criar.
 
+        $routeFormat = str_replace('/', '_', $_SERVER['REQUEST_URI']);
+        $payload = ['route_access' => $routeFormat, 'attempts' => 1];
+
         // velidação para ver se da erro
         if (!$lock || !flock($lock, LOCK_EX)) return; 
 
         try {
             
-            $data = $this->readData($file);
+            $data = $this->readData($file) ?? [];
 
             if(
                 isset($data) 
@@ -46,31 +49,62 @@ class RateLimitMiddleware
                 is_array($data) 
                 && 
                 count($data) > 0 
-                && isset($data['blocked_until'])
                 ) 
             {
-
-                if(!empty($data['blocked_until']) ) 
-                {
-                    if($now < $data['blocked_until']) $this->blocked($data['blocked_until'] - $now);
-
-                    // bloqueio expirou, então necessidade de resetar.
-                    $data  = [];
+                foreach ($data as $key => $value) {
                     
+                    if(!isset($value['blocked_until'] ) ) continue;
+                    if(!isset($value['route_access'])) continue;
+
+                    if($value['route_access'] == $routeFormat) 
+                    {
+                        if(!empty($value['blocked_until']) ) 
+                        {
+                            if($now < $value['blocked_until']) $this->blocked($data[$key]['blocked_until'] - $now);
+        
+                            // bloqueio expirou, então necessidade de resetar.
+                            unset($data[$key]);
+                            $data = array_values($data);
+                            
+                        }
+                    }
+
+                    # code...
                 }
 
             }
 
-            $data['attemps'] = ($data['attemps'] ?? 0) + 1;
+            //=================================================
+          
+            $found = false;
+            if($data) {
+              
+                foreach ($data as $key => $value) {
 
-            if($data['attemps'] > $this->_limit)
-            {
-                $data['blocked_until'] = $now + $this->_lockDuration;
-                $this->writeData($file, $data);
-                $this->blocked($this->_lockDuration);
-            }
-
+                    if(!isset($value['route_access'])) continue;
+                    
+                    if($value['route_access'] == $routeFormat) 
+                    {
+                        $found = true;
+                        $data[$key]['attempts'] = isset($value['attempts']) ? (int)$value['attempts'] + 1 : 100;
+                        if($value['attempts'] > $this->_limit)
+                        {
+                            $data[$key]['blocked_until'] = $now + $this->_lockDuration;
+                            $this->writeData($file, $data);
+                            $this->blocked($this->_lockDuration);
+                        }
+                    }
+                }
+                // se found = false, não existe rota de acesso no arquivo, precisa criar uma nova.
+                if(!$found) array_push($data, $payload);
+                
+            }else array_push($data, $payload);;
+            
+                
+            //=================================================
             $this->writeData($file, $data);
+            //=================================================
+
 
         } catch (\Exception $e) {
             error_log($e->getMessage());
@@ -141,7 +175,7 @@ class RateLimitMiddleware
     }
 
     private function writeData(string $file, array $data): void
-    {
+    {   
         file_put_contents($file, json_encode($data), LOCK_EX);
     }
 
