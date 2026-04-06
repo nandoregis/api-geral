@@ -17,7 +17,7 @@ return [
                 "middlewares" => [
                     new AuthMiddleware,
                     // new ApiKeyMiddleware, 
-                    new RateLimitMiddleware(50,30)
+                    new RateLimitMiddleware(100,5)
                 ],
                 "active" => true
             ],
@@ -29,7 +29,7 @@ return [
                 "middlewares" => [
                     new AuthMiddleware, 
                     // new ApiKeyMiddleware,
-                    new RateLimitMiddleware(50,30)
+                    new RateLimitMiddleware(100,5)
                 ],
                 "active" => true
             ],
@@ -124,7 +124,7 @@ return [
                 "middlewares" => [
                     new AuthMiddleware,
                     // new ApiKeyMiddleware, 
-                       new RateLimitMiddleware(50,10)
+                       new RateLimitMiddleware(100,10)
                 ],
                 "active" => true
             ]
@@ -154,7 +154,7 @@ return [
                 "middlewares" => [
                     new AuthMiddleware,
                     // new ApiKeyMiddleware, 
-                    new RateLimitMiddleware(50,10)
+                    new RateLimitMiddleware(100,10)
                 ],
                 "active" => true
             ],
