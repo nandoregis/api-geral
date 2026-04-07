@@ -171,7 +171,7 @@ return [
                 "active" => true
             ],
             [
-                "route" => "/u/update",
+                "route" => "/u/update/{uuid}",
                 "controller" => new ProdutosController,
                 "method" => "updateColors",
                 "http" => ["PUT"],
