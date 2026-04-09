@@ -53,6 +53,26 @@ class ProdutosController extends Controller
         );
     }
 
+    // search produto for reference
+
+    public function searchByReference(object $req)
+    {
+        $response = $this->getterProdutosController->searchByReference( $req );
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
+
+    public function getProductVariationsByUUID(object $req)
+    {
+        $response = $this->getterProdutosController->getProductVariationsByUUID($req);
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
+
     public function create(object $req) 
     {   
         $response = $this->setterProdutosController->create($req);

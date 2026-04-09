@@ -41,7 +41,19 @@ return [
                 "middlewares" => [
                     new AuthMiddleware,
                     // new ApiKeyMiddleware, 
-                     new RateLimitMiddleware(50,30)  
+                     new RateLimitMiddleware(50,20)  
+                ],
+                "active" => true
+            ],
+            [   
+                "route" => "/reference/search/{term}",
+                "controller" => new ProdutosController,
+                "method" => "searchByReference",
+                "http" => ["GET"],
+                "middlewares" => [
+                    new AuthMiddleware,
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(100,5)
                 ],
                 "active" => true
             ],
@@ -73,8 +85,20 @@ return [
         ]
     ],
     [
-        'static' => 'v1/product_variations',
+        'static' => 'v1/product-variations',
         'routes' => [
+            [   
+                "route" => "/{uuid}",
+                "controller" => new ProdutosController,
+                "method" => "getProductVariationsByUUID",
+                "http" => ["GET"],
+                "middlewares" => [
+                    new AuthMiddleware,
+                    // new ApiKeyMiddleware, 
+                       new RateLimitMiddleware(50,10)
+                ],
+                "active" => true
+            ],
             [   
                 "route" => "/c/create",
                 "controller" => new ProdutosController,

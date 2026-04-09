@@ -28,6 +28,16 @@ class GetterProdutosController
         return Response::success(200, "Produto pego pela referencia", $this->getterProdutosModel->getByReference($reference));
     }
 
+    public function searchByReference(object $req)
+    {
+        return Response::success(200, "Produto", $this->getterProdutosModel->searchByReference( $req->uri('term') ));
+    }
+
+    public function getProductVariationsByUUID(object $req)
+    {
+        return Response::success(200, "Variações do produto", $this->getterProdutosModel->getProductVariationsByUUID( $req->uri('uuid')));
+    }
+
     /**
      *  ### Verifica se referencia existe em que o uuid do produto seja diferente.
      */

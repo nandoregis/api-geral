@@ -54,6 +54,27 @@ class GetterProdutosModel extends Model
 
         return $product ?: [];
     }
+
+    // search produtos por referencia.
+    public function searchByReference(string $term) : array
+    {   
+        $sql = "SELECT uuid, reference, `name` 
+            FROM products 
+            WHERE reference LIKE ? OR `name` LIKE ?
+            LIMIT 20
+        ";
+
+        $like = "%{$term}%";
+
+        $products = $this->fetchAll($sql, [$like, $like]);
+
+        // // adiciona variações em cada produto
+        // foreach ($products as &$product) {
+        //     $product['variations'] = $this->getProductVariationsByUUID($product['uuid']);
+        // }
+
+        return $products ?: [];
+    }
     
     #
     public function checkReferenceWithDifferentUUID(string $uuid, string $reference) : bool
