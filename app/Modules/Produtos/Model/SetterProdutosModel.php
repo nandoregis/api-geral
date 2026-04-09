@@ -171,7 +171,7 @@ class SetterProdutosModel extends Model
 
             $stmt->execute();
 
-            return ['uuid' => $uuid, 'user_uuid' => $user_uuid, 'total' => 0];
+            return ['uuid' => $uuid, 'payment' => 'pendente', 'status' => 0, 'total' => 0];
 
         } catch (\Exception $e) {
             error_log($e->getMessage());

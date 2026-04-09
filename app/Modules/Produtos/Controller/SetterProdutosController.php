@@ -193,7 +193,7 @@ class SetterProdutosController
     public function newSale(object $req) : array
     {
        
-        $user_uuid = $req->input('user_uuid','');
+        $user_uuid = isset($req->authTokenDecoded) ? $req->authTokenDecoded['uuid'] : "";
         $this->productValidator->validateUUID($user_uuid);
 
         if ($this->productValidator->hasErrors()) {
