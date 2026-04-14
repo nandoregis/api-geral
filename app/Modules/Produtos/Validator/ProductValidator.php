@@ -88,7 +88,7 @@ class ProductValidator extends Validation
             fn() => $this->helpBaseValidate('quantity', fn() => self::noExist($quantity), 'Não está com o parametro quantity, faça a correção.'),
             fn() => $this->helpBaseValidate('quantity', fn() => self::isEmpty($quantity), 'Quantidade não pode ser vazio.'),
             fn() => $this->helpBaseValidate('quantity', fn() => !self::isNumber($quantity), 'Quantidade deve ter o tipo inteiro.'),
-            fn() => $this->helpBaseValidate('quantity', fn() => !self::regex($quantity, ProductRules::INT), 'Quanditade está fora do formato esperado, numero inteiro se é esperado.')
+            fn() => $this->helpBaseValidate('quantity', fn() => !self::regex($quantity, ProductRules::INT), 'Quantidade está fora do formato esperado, numero inteiro se é esperado.')
         );
     }
     
