@@ -77,7 +77,7 @@ class ProductValidator extends Validation
             fn() => $this->helpBaseValidate('price', fn() => self::noExist($price), 'Não está com o parametro price, faça a correção.'),
             fn() => $this->helpBaseValidate('price', fn() => self::isEmpty($price), 'O preço não pode ser vazio.'),
             fn() => $this->helpBaseValidate('price', fn() => !self::isString($price), 'O preço deve ter o tipo string'),
-            fn() => $this->helpBaseValidate('price', fn() => !self::regex($price, ProductRules::PRICE), 'o Preço está fora do formato esperado, o que se é esperado : 0,00')
+            fn() => $this->helpBaseValidate('price', fn() => !self::regex($price, ProductRules::PRICE), 'O preço está fora do formato esperado, o que se é esperado : 0,00')
         );
 
     }

@@ -240,7 +240,6 @@ class SetterProdutosController
             $value['price'] = ProductHelper::price_format($value['price']);
             $value['quantity'] = (int) $value['quantity'];
 
-
             $existing = $this->getterProdutosModel->getSaleItemsBySaleUUIDVariationUUID($sale_uuid, $value['variation_uuid'], $value['price']);
 
             if($existing) {
