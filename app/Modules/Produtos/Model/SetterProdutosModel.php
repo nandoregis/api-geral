@@ -281,6 +281,12 @@ class SetterProdutosModel extends Model
         }
     }
 
+    public function deleteProductInSale(string $variationUuid) : array
+    {
+        $sql = "DELETE FROM sale_items WHERE variation_uuid = :variation_uuid";
+        return[];
+    }
+
     public function finishSale(string $uuid) : array
     {
         
