@@ -106,6 +106,8 @@ http://localhost/seu-projeto/v1
 * `GET /v1/sales/items/{sale_uuid}` → Itens da venda
 * `POST /v1/sales/c/create` → Criar venda
 * `POST /v1/sales/itens/c/create` → Adicionar item à venda
+* `DELETE /v1/sales/itens/d/delete/{variation_uuid}` → Remover item à venda
+* `DELETE /v1/sales/itens/all/d/delete/sale/{sale_uuid}` → Remover todos os itens da venda
 
 ---
 
