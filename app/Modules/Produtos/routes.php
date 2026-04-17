@@ -292,7 +292,7 @@ return [
             [
                 "route" => "/items/{sale_uuid}",
                 "controller" => new ProdutosController,
-                "method" => "getSalesItemsBySaleUUID",
+                "method" => "getSaleItemsBySaleUUID",
                 "http" => ["GET"],
                 "middlewares" => [
                     new AuthMiddleware,
@@ -330,6 +330,30 @@ return [
                 "controller" => new ProdutosController,
                 "method" => "addProductInSale",
                 "http" => ["POST"],
+                "middlewares" => [
+                    new AuthMiddleware,
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(50,10)
+                ],
+                "active" => true
+            ],
+            [
+                "route" => "/itens/d/delete/{variation_uuid}",
+                "controller" => new ProdutosController,
+                "method" => "deleteProductInSale",
+                "http" => ["DELETE"],
+                "middlewares" => [
+                    new AuthMiddleware,
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(50,10)
+                ],
+                "active" => true
+            ],
+                [
+                "route" => "/itens/all/d/delete/sale/{sale_uuid}",
+                "controller" => new ProdutosController,
+                "method" => "deleteAllProductsInSale",
+                "http" => ["DELETE"],
                 "middlewares" => [
                     new AuthMiddleware,
                     // new ApiKeyMiddleware, 

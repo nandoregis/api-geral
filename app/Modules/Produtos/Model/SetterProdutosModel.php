@@ -284,7 +284,39 @@ class SetterProdutosModel extends Model
     public function deleteProductInSale(string $variationUuid) : array
     {
         $sql = "DELETE FROM sale_items WHERE variation_uuid = :variation_uuid";
-        return[];
+        
+        try {
+            $stmt = parent::PrimayDB()->prepare($sql);
+
+            $stmt->bindValue(':variation_uuid', $variationUuid);
+
+            $stmt->execute();
+
+            return ['variation_uuid' => $variationUuid];
+
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            return []; 
+        }
+    }
+
+    public function deleteAllProductsInSale(string $sale_uuid) : array
+    {
+        $sql = "DELETE FROM sale_items WHERE sale_uuid = :sale_uuid";
+        
+        try {
+            $stmt = parent::PrimayDB()->prepare($sql);
+
+            $stmt->bindValue(':sale_uuid', $sale_uuid);
+
+            $stmt->execute();
+
+            return ['sale_uuid' => $sale_uuid];
+
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            return []; 
+        }
     }
 
     public function finishSale(string $uuid) : array

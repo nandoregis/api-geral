@@ -169,6 +169,22 @@ class ProdutosController extends Controller
         );
     }
 
+    public function deleteProductInSale(object $req) {
+        $response = $this->setterProdutosController->deleteProductInSale($req);
+        return parent::apiView( 
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED),
+            $response
+        );
+    }
+
+    public function deleteAllProductsInSale(object $req) {
+        $response = $this->setterProdutosController->deleteAllProductsInSale($req);
+        return parent::apiView( 
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::CREATED),
+            $response
+        );
+    }
+
     public function finishSale(object $req) 
     {
         $response = $this->setterProdutosController->finishSale($req);

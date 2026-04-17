@@ -303,7 +303,7 @@ class SetterProdutosController
     }
 
     public function deleteProductInSale(object $req) {
-        $uuid = $req->input('variation_uuid','');
+        $uuid = $req->uri('variation_uuid','');
 
         $this->productValidator->validateUUID($uuid);
 
@@ -318,6 +318,25 @@ class SetterProdutosController
         }
 
         return Response::success(HttpCode::OK, "Produto removido da venda", $result);
+    }
+
+    public function deleteAllProductsInSale(object $req) {
+        $uuid = $req->uri('sale_uuid','');
+
+        $this->productValidator->validateUUID($uuid);
+
+        if($this->productValidator->hasErrors()) {
+            return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
+        }
+
+        $result = $this->setterProdutosModel->deleteAllProductsInSale($uuid);
+
+        if(!$result) {
+            return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro deletar os produtos da venda");
+        }
+
+        return Response::success(HttpCode::OK, "Produtos removidos da venda", $result);
+
     }
 
     public function finishSale(object $req) {
