@@ -343,9 +343,16 @@ class SetterProdutosController
 
         $uuid = $req->uri('uuid','');
         $payment = $req->input('payment','');
+        $discount = $req->input('discount', 0);
+
+        //'pendente','dinheiro','pix','credito','debito'
+
+        $payloadPaymentType = ['pendente','dinheiro','pix','credito','debito'];
+        $paymentTypeOk = false;
 
         $this->productValidator->validateUUID($uuid);
         $this->productValidator->validateName($payment);
+        $this->productValidator->validatePrice($discount);
 
         if ($this->productValidator->hasErrors()) {
             return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
@@ -354,11 +361,34 @@ class SetterProdutosController
         $sale = $this->getterProdutosModel->getSaleByUUID($uuid);
         $saleItems = $this->getterProdutosModel->getSaleItemsBySaleUUID($uuid);
 
-        if($payment === 'pendente'){
-            return Response::error(HttpCode::UNAUTHORIZED,'Venda não pode finalizar com opção de pagamento pendente');
+        //================================ validar tipo de pagamento ==========================================
+        if($payment === $payloadPaymentType[0])
+        {
+            return Response::error(
+                HttpCode::UNAUTHORIZED,
+                'Venda não pode finalizar com opção de pagamento pendente'
+            );
         }
 
-        if(empty($saleItems)) return Response::error(HttpCode::NOT_FOUND, "Venda não pode fechar sem produtos");
+        for ($i=1; $i < count($payloadPaymentType); $i++) { 
+            if($payment === $payloadPaymentType[$i]) {
+                $paymentTypeOk = true;
+                break;
+            }
+
+        }
+
+        if($paymentTypeOk === false) 
+        {
+            return Response::error(
+                HttpCode::UNAUTHORIZED,
+                'Forma de pagamento não aceita, asopções aceitaveis: dinheiro, pix, credito, debito'
+            );
+        }
+
+        //======================================= Validar venda =====================================================
+
+        if(empty($saleItems)) return Response::error(HttpCode::UNAUTHORIZED, "Venda não pode fechar sem produtos");
 
         if( isset($sale) ) {
             if($sale['status'] == 1) return Response::error(HttpCode::UNAUTHORIZED, 'Venda já finalizada');
@@ -368,21 +398,27 @@ class SetterProdutosController
         {   
             $quantity =  isset($value['quantity']) ? (int) $value['quantity'] : "";
             $variation_uuid = isset($value['variation_uuid']) ? $value['variation_uuid'] : "";
+
+            $product_name = isset($value['product_name']) ? $value['product_name'] : "";
+            $size_name = isset($value['size_name']) ? $value['size_name'] : "";
+            $color_name = isset($value['color_name']) ? $value['color_name'] : "";
            
             $quantityStock = $this->getterProdutosModel->getStockByVariationUUID($variation_uuid); 
 
             if(empty($quantityStock)) {
-                return Response::error(HttpCode::NOT_FOUND,"Não existe produto em estoque com essa variação");
-                break;
+                return Response::error(HttpCode::UNAUTHORIZED,"Produto $product_name - $color_name de tamanho $size_name não possui estoque suficiente");
             }
 
             if( $quantity > $quantityStock['quantity']) {
-                return Response::error(HttpCode::UNAUTHORIZED,"Quantidade maior do que existente em estoque");
-                break;
+                return Response::error(
+                HttpCode::UNAUTHORIZED,
+                "Produto - $product_name de cor $color_name e tamanho $size_name não possui estoque suficiente, quantidade existenter é inferiror a quantidade solicitada");
             }
         }
 
-        $result = $this->setterProdutosModel->finishSale($uuid);
+        //===================================================================================================
+
+        $result = $this->setterProdutosModel->finishSale($uuid, $payment, $discount);
 
         if(!$result) {
             return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para finalizar a venda");

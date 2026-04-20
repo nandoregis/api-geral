@@ -319,9 +319,9 @@ return [
                 "method" => "finishSale",
                 "http" => ["PUT"],
                 "middlewares" => [
-                    // new AuthMiddleware,
+                    new AuthMiddleware,
                     // new ApiKeyMiddleware, 
-                    new RateLimitMiddleware(50,10)
+                    new RateLimitMiddleware(20,10)
                 ],
                 "active" => true
             ],

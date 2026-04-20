@@ -319,13 +319,13 @@ class SetterProdutosModel extends Model
         }
     }
 
-    public function finishSale(string $uuid) : array
+    public function finishSale(string $uuid, float $payment, float $discount) : array
     {
         
         $pdo = parent::PrimayDB();
         $pdo->beginTransaction();
 
-        $sql = "UPDATE sales SET total = :total, `status` = :status, payment = :payment WHERE uuid = :uuid";
+        $sql = "UPDATE sales SET total = :total, discount = :discount,`status` = :status, payment = :payment WHERE uuid = :uuid";
 
         try {
 
@@ -345,8 +345,9 @@ class SetterProdutosModel extends Model
 
             $stmt->bindValue(':uuid', $uuid);
             $stmt->bindValue(':total', $total);
+            $stmt->bindValue(':discount', $discount);
             $stmt->bindValue(':status', 1);
-            $stmt->bindValue(':payment', "dinheiro");
+            $stmt->bindValue(':payment', $payment);
             
             $stmt->execute();
 
