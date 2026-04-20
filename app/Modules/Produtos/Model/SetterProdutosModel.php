@@ -340,6 +340,8 @@ class SetterProdutosModel extends Model
                 $this->stockProductExit($product_uuid, $value['variation_uuid'], $value['quantity'], $pdo);
                 $this->stockMovements($product_uuid,$value['variation_uuid'],'out',$value['quantity'],'Saída por venda no PDV', $pdo);
             }
+
+            $total = $total - $discount;
        
             $stmt = $pdo->prepare($sql);
 
