@@ -213,6 +213,7 @@ class GetterProdutosModel extends Model
             c.uuid AS color_uuid,
             
             p.name AS product_name,
+            p.reference AS product_reference,
             s.name AS size_name,
             c.name AS color_name,
             c.color_hex,
