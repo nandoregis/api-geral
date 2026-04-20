@@ -319,7 +319,7 @@ class SetterProdutosModel extends Model
         }
     }
 
-    public function finishSale(string $uuid, float $payment, float $discount) : array
+    public function finishSale(string $uuid, string $payment, float $discount) : array
     {
         
         $pdo = parent::PrimayDB();
@@ -338,7 +338,7 @@ class SetterProdutosModel extends Model
                 $total = $total + ($value['quantity'] * $value['price']);
 
                 $this->stockProductExit($product_uuid, $value['variation_uuid'], $value['quantity'], $pdo);
-                $this->stockMovements($product_uuid,$value['variation_uuid'],'out',$value['quantity'],'Saída manual no estoque', $pdo);
+                $this->stockMovements($product_uuid,$value['variation_uuid'],'out',$value['quantity'],'Saída por venda no PDV', $pdo);
             }
        
             $stmt = $pdo->prepare($sql);

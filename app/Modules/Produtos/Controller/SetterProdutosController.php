@@ -357,6 +357,8 @@ class SetterProdutosController
         if ($this->productValidator->hasErrors()) {
             return Response::error(HttpCode::UNAUTHORIZED, $this->productValidator->getErrors());
         }
+
+        $discount = ProductHelper::price_format($discount);
          
         $sale = $this->getterProdutosModel->getSaleByUUID($uuid);
         $saleItems = $this->getterProdutosModel->getSaleItemsBySaleUUID($uuid);
