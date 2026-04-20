@@ -192,7 +192,7 @@ class GetterProdutosModel extends Model
 
     public function getSaleByUUID(string $uuid) : array
     {
-        $sql = "SELECT uuid, total, `status`, payment FROM sales WHERE uuid = ?";
+        $sql = "SELECT uuid, total, discount, `status`, payment FROM sales WHERE uuid = ?";
         return $this->fetchOne($sql, [$uuid]);
     }
 
