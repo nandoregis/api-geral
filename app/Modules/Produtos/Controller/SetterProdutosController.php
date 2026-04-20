@@ -403,16 +403,19 @@ class SetterProdutosController
             $size_name = isset($value['size_name']) ? $value['size_name'] : "";
             $color_name = isset($value['color_name']) ? $value['color_name'] : "";
            
-            $quantityStock = $this->getterProdutosModel->getStockByVariationUUID($variation_uuid); 
+            $consultStock = $this->getterProdutosModel->getStockByVariationUUID($variation_uuid);
+            $quantityStock = isset($consultStock['quantity']) ? $consultStock['quantity'] : 0;
 
-            if(empty($quantityStock)) {
-                return Response::error(HttpCode::UNAUTHORIZED,"Produto $product_name - $color_name de tamanho $size_name não possui estoque suficiente");
+            if(empty($consultStock)) {
+                return Response::error(
+                    HttpCode::UNAUTHORIZED,
+                    "Produto $product_name - $color_name de tamanho $size_name não possui estoque suficiente, quantidade existente : $quantityStock");
             }
 
-            if( $quantity > $quantityStock['quantity']) {
+            if( $quantity > $quantityStock ) {
                 return Response::error(
                 HttpCode::UNAUTHORIZED,
-                "Produto - $product_name de cor $color_name e tamanho $size_name não possui estoque suficiente, quantidade existenter é inferiror a quantidade solicitada");
+                "Produto - $product_name de cor $color_name e tamanho $size_name não possui estoque suficiente, a quantidade solicitada, quantidade existente : $quantityStock");
             }
         }
 
