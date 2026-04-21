@@ -266,6 +266,18 @@ return [
                 "active" => true
             ],
             [
+                "route" => "/status/open",
+                "controller" => new ProdutosController,
+                "method" => "getAllSalesOpen",
+                "http" => ["GET"],
+                "middlewares" => [
+                    new AuthMiddleware,
+                    // new ApiKeyMiddleware, 
+                    new RateLimitMiddleware(100,10)
+                ],
+                "active" => true
+            ],
+            [
                 "route" => "/{uuid}",
                 "controller" => new ProdutosController,
                 "method" => "getSaleByUUID",

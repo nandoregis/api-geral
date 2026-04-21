@@ -96,6 +96,11 @@ class GetterProdutosController
         return Response::success(200, "Todas as vendas", $this->getterProdutosModel->getAllSales());
     }
 
+    public function getAllSalesOpen() : array
+    {
+        return Response::success(200, "Todas as vendas abertas", $this->getterProdutosModel->getAllSalesOpen());
+    }
+
     public function getSaleByUUID(object $req) : array
     {
         return Response::success(200, "Venda pego pelo UUID", $this->getterProdutosModel->getSaleByUUID($req->uri('uuid') ));

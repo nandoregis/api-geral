@@ -123,6 +123,15 @@ class ProdutosController extends Controller
         );
     }
 
+    public function getAllSalesOpen() 
+    {
+        $response = $this->getterProdutosController->getAllSalesOpen();
+        return parent::apiView(
+            Validation::hasCode( Validation::arrayHasKey($response, 'code'), HttpCode::OK),
+            $response
+        );
+    }
+
     public function getSaleByUUID(object $req) 
     {
         $response = $this->getterProdutosController->getSaleByUUID($req);

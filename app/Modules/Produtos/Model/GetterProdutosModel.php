@@ -190,6 +190,12 @@ class GetterProdutosModel extends Model
         return $this->fetchAll($sql);
     }
 
+    public function getAllSalesOpen() : array
+    {
+        $sql = "SELECT uuid, total, `status`, payment FROM sales WHERE `status` = ?";
+        return $this->fetchAll($sql, [0]);
+    }
+
     public function getSaleByUUID(string $uuid) : array
     {
         $sql = "SELECT uuid, total, discount, `status`, payment FROM sales WHERE uuid = ?";
