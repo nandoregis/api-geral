@@ -13,7 +13,7 @@ return [
                 "method" => "auth",
                 "http" => ["POST"],
                 "middlewares" => [
-                    new RateLimitMiddleware(3,9)
+                    new RateLimitMiddleware(20,10)
                 ],
                 "active" => true
             ],
@@ -23,7 +23,7 @@ return [
                 "method" => "me",
                 "http" => ["PUT"],
                 "middlewares" => [
-                    new RateLimitMiddleware(3,9)
+                    new RateLimitMiddleware(10,10)
                 ],
                 "active" => true
             ],
