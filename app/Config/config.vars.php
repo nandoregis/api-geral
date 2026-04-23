@@ -3,8 +3,10 @@
 date_default_timezone_set('America/Sao_Paulo');
 session_start();
 
-$envPath = str_replace('app\\Config','', __DIR__);
-$env = parse_ini_file($envPath.'.env');
+// $envPath = str_replace('app\\Config','', __DIR__);
+// $env = parse_ini_file($envPath.'.env');
+
+$env = parse_ini_file('.env');
 
 // URL
 define('BASE_URL', 'http://api-projects.localhost/');

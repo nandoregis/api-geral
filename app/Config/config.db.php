@@ -1,8 +1,9 @@
 <?php
 
+// $envPath = str_replace('app\\Config','', __DIR__);
+// $env = parse_ini_file($envPath.'.env');
 
-$envPath = str_replace('app\\Config','', __DIR__);
-$env = parse_ini_file($envPath.'.env');
+$env = parse_ini_file('.env');
 
 // URL DO SITE 
 

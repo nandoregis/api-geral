@@ -344,9 +344,9 @@ class SetterProdutosController
         $uuid = $req->uri('uuid','');
         $payment = $req->input('payment','');
         $discount = $req->input('discount', 0);
+        $total = 0;
 
         //'pendente','dinheiro','pix','credito','debito'
-
         $payloadPaymentType = ['pendente','dinheiro','pix','credito','debito'];
         $paymentTypeOk = false;
 
@@ -384,7 +384,7 @@ class SetterProdutosController
         {
             return Response::error(
                 HttpCode::UNAUTHORIZED,
-                'Forma de pagamento não aceita, asopções aceitaveis: dinheiro, pix, credito, debito'
+                'Forma de pagamento não aceita!, as opções aceitaveis: dinheiro, pix, credito, debito'
             );
         }
 
@@ -398,8 +398,11 @@ class SetterProdutosController
         
         foreach ($saleItems as $key => $value) 
         {   
-            $quantity =  isset($value['quantity']) ? (int) $value['quantity'] : "";
+            $quantity =  isset($value['quantity']) ? (int) $value['quantity'] : 0;
+            $price = isset($value['price']) ? $value['price'] : 0;
             $variation_uuid = isset($value['variation_uuid']) ? $value['variation_uuid'] : "";
+
+            $total = ( $quantity *  $price ) + $total;
 
             $product_name = isset($value['product_name']) ? $value['product_name'] : "";
             $size_name = isset($value['size_name']) ? $value['size_name'] : "";
@@ -421,9 +424,15 @@ class SetterProdutosController
             }
         }
 
+        // validar se valor do desconto é maior do que valor total. ( não pode passar )
+        if($discount > $total) 
+        {
+            return Response::error(HttpCode::UNAUTHORIZED, "O desconto não pode ser maior que o total da venda");
+        }
+
         //===================================================================================================
 
-        $result = $this->setterProdutosModel->finishSale($uuid, $payment, $discount);
+        $result = $this->setterProdutosModel->finishSale($uuid, $payment, $total, $discount, $saleItems);
 
         if(!$result) {
             return Response::error(HttpCode::INTERNAL_SERVER_ERROR, "Houve um erro para finalizar a venda");

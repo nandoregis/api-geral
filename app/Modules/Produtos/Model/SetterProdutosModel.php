@@ -319,7 +319,7 @@ class SetterProdutosModel extends Model
         }
     }
 
-    public function finishSale(string $uuid, string $payment, float $discount) : array
+    public function finishSale(string $uuid, string $payment, float $total, float $discount, array $saleVariations) : array
     {
         
         $pdo = parent::PrimayDB();
@@ -328,8 +328,9 @@ class SetterProdutosModel extends Model
         $sql = "UPDATE sales SET total = :total, discount = :discount,`status` = :status, payment = :payment WHERE uuid = :uuid";
 
         try {
+            
+            if(empty($saleVariations)) $saleVariations = $this->getterProdutosModel->getSaleItemsBySaleUUID($uuid);
 
-            $saleVariations = $this->getterProdutosModel->getSaleItemsBySaleUUID($uuid);
             $total = 0;
             
             foreach ($saleVariations as $key => $value) 
