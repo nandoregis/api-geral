@@ -275,26 +275,5 @@ class GetterProdutosModel extends Model
         $sql = "SELECT * FROM stock WHERE variation_uuid = ?";
         return $this->fetchOne($sql, [$variation_uuid]);
     }
-      
-    //=======================================================
-    //                                                      |
-    //                  METODOS AUXILIARES                  |
-    //                                                      |
-    //=======================================================
-
-    private function fetchOne(string $sql, array $params): array
-    {
-        $stmt = parent::PrimayDB()->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
-    }
-
-    private function fetchAll(string $sql, array $params = []): array
-    {
-        $stmt = parent::PrimayDB()->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-    }
-
 
 }
