@@ -9,20 +9,19 @@ class GetterClientesModel extends Model
 {
     public function getall()
     {
-        $sql = "SELECT * FROM clientes ORDER BY  `name` ASC";
-        $stmt = parent::PrimayDB()->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->fetchAll("SELECT * FROM clientes ORDER BY  `name` ASC");
     }
 
-    public function getByUuid()
+    public function getByUuid(string $uuid)
     {
-
+        return $this->fetchOne("SELECT * FROM clientes WHERE uuid = :uuid", ['uuid' => $uuid]);
     }
 
-    public function getByEmail()
+    public function getByEmail(string $email)
     {
-
+        return $this->fetchOne("SELECT * FROM clientes WHERE email = :email", ['email' => $email]);
     }
+
+    
     
 }
