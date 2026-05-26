@@ -7,19 +7,19 @@ use PDO;
 
 class GetterClientesModel extends Model
 {
-    public function getall()
+    public function getAll()
     {
-        return $this->fetchAll("SELECT * FROM clientes ORDER BY  `name` ASC");
+        return $this->fetchAll("SELECT uuid, `name`, last_name, cpf, cep, contact, email FROM clients ORDER BY  `name` ASC");
     }
 
     public function getByUuid(string $uuid)
     {
-        return $this->fetchOne("SELECT * FROM clientes WHERE uuid = :uuid", ['uuid' => $uuid]);
+        return $this->fetchOne("SELECT uuid, `name`, last_name, cpf, cep, contact, email FROM clients WHERE uuid = :uuid", ['uuid' => $uuid]);
     }
 
     public function getByEmail(string $email)
     {
-        return $this->fetchOne("SELECT * FROM clientes WHERE email = :email", ['email' => $email]);
+        return $this->fetchOne("SELECT uuid, `name`, last_name, cpf, cep, contact, email FROM clients WHERE email = :email", ['email' => $email]);
     }
 
     
